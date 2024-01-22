@@ -1,8 +1,14 @@
-@import './base.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
 
 #app {
   max-width: 1280px;
