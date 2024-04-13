@@ -4,6 +4,6 @@ export enum LayoutTypes {
 }
 
 export const layoutComponentName: Record<LayoutTypes, string> = {
-  [LayoutTypes.Default]: 'DefaultLayout.vue',
-  [LayoutTypes.Calendar]: 'CalendarLayout.vue',
+  [LayoutTypes.Default]: 'DefaultLayout',
+  [LayoutTypes.Calendar]: 'CalendarLayout',
 }

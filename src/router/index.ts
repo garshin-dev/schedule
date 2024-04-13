@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { LayoutTypes } from '@/layouts/layouts.types'
-import { beforeEach } from 'vitest'
 import { loadLayoutMiddleware } from '@/router/middleware/layout.middleware'
 
 const router = createRouter({
@@ -22,6 +21,6 @@ const router = createRouter({
   ]
 })
 
-beforeEach(loadLayoutMiddleware)
+router.beforeEach(loadLayoutMiddleware)
 
 export default router
