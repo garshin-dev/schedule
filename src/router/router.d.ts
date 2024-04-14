@@ -3,7 +3,7 @@ import type { VueElement } from 'vue'
 
 declare module "vue-router" {
   interface RouteMeta {
-    layout?: LayoutTypes;
-    layoutComponent?: VueElement;
+    layout?: LayoutTypes
+    layoutComponent?: VueElement
   }
 }
