@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mount, RouterLinkStub } from '@vue/test-utils'
-import AppButton from '../AppButton'
+import AppButton from './AppButton.vue'
 
 describe('AppButton', () => {
   it('should render', () => {
