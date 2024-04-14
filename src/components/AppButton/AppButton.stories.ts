@@ -7,8 +7,8 @@ const meta: Meta<typeof AppButton> = {
     type: { control: 'select', options: ['primary', 'secondary'] },
     to: { control: 'text' },
     disabled: { control: 'boolean' },
-    target: { control: 'text' },
-  },
+    target: { control: 'text' }
+  }
 }
 
 export default meta
@@ -34,7 +34,3 @@ export const Link: Story = {
     to: '/'
   }
 }
-
-
-
-

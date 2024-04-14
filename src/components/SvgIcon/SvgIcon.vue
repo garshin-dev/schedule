@@ -1,10 +1,5 @@
 <template>
-  <component
-    :is="icon"
-    :width="size"
-    :height="size"
-    :style="{ minWidth: size }"
-  />
+  <component :is="icon" :width="size" :height="size" :style="{ minWidth: size }" />
 </template>
 
 <script setup lang="ts">

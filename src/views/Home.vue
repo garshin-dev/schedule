@@ -6,21 +6,17 @@ import AppButton from '@/components/AppButton'
   <div class="text-red-600">
     <h1>This is a home page</h1>
     <div class="flex flex-col">
-<!--      <AppButton-->
-<!--        to="/about/"-->
-<!--      >-->
-<!--        Some btn-->
-<!--      </AppButton>-->
-<!--      <AppButton-->
-<!--        type="secondary"-->
-<!--      >-->
-<!--        Oara Иее btn-->
-<!--      </AppButton>-->
-      <AppButton
-        icon="notification"
-      >
-        Btn with icon
-      </AppButton>
+      <!--      <AppButton-->
+      <!--        to="/about/"-->
+      <!--      >-->
+      <!--        Some btn-->
+      <!--      </AppButton>-->
+      <!--      <AppButton-->
+      <!--        type="secondary"-->
+      <!--      >-->
+      <!--        Oara Иее btn-->
+      <!--      </AppButton>-->
+      <AppButton icon="notification"> Btn with icon </AppButton>
     </div>
   </div>
 </template>

@@ -1,9 +1,7 @@
 <template>
   <div class="bg-amber-200">
-    <slot/>
+    <slot />
   </div>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>

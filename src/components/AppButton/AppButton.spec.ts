@@ -33,9 +33,9 @@ describe('AppButton', () => {
       },
       global: {
         stubs: {
-          RouterLink: RouterLinkStub,
-        },
-      },
+          RouterLink: RouterLinkStub
+        }
+      }
     })
 
     expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/about/')

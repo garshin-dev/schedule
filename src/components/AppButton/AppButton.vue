@@ -10,11 +10,8 @@
       'bg-red-400 hover:bg-red-700': type === 'secondary'
     }"
   >
-    <SvgIcon
-      v-if="icon"
-      :name="icon"
-    />
-    <slot/>
+    <SvgIcon v-if="icon" :name="icon" />
+    <slot />
   </component>
 </template>
 

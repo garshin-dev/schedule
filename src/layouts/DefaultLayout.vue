@@ -1,9 +1,7 @@
 <template>
   <div class="bg-blue-400">
-    <slot/>
+    <slot />
   </div>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
