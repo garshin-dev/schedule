@@ -6,7 +6,5 @@ export async function loadLayoutMiddleware(route: RouteLocationNormalized) {
   const componentName = layoutComponentName[layoutName]
   const component = await import(`../../layouts/${componentName}.vue`)
 
-  console.log('route.meta !!!!', route.meta)
-
   route.meta.layoutComponent = component.default
 }

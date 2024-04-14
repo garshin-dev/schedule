@@ -10,16 +10,23 @@
       'bg-red-400 hover:bg-red-700': type === 'secondary'
     }"
   >
+    <SvgIcon
+      v-if="icon"
+      :name="icon"
+    />
     <slot/>
   </component>
 </template>
 
 <script setup lang="ts">
+import SvgIcon from '@/components/SvgIcon'
+
 interface ButtonProps {
   type?: 'primary' | 'secondary'
   to?: string | null
   disabled?: boolean
   target?: string | null
+  icon?: string | null
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
