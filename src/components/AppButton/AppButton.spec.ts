@@ -29,19 +29,15 @@ describe('AppButton', () => {
   it('renders as a RouterLink', () => {
     const wrapper = mount(AppButton, {
       props: {
-        to: '/some/'
+        to: '/about/'
       },
-      slots: {
-        default: 'Link text'
+      global: {
+        stubs: {
+          RouterLink: RouterLinkStub,
+        },
       },
-      stubs: {
-        RouterLink: RouterLinkStub
-      }
     })
 
-    console.log('----------- wrapper', wrapper.element)
-    console.log('----------- wrapper', wrapper.attributes())
-
-    expect(wrapper.attributes().to).toBe('/some/')
+    expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/about/')
   })
 })
