@@ -11,7 +11,7 @@ interface SvgIconProps {
 }
 
 const props = withDefaults(defineProps<SvgIconProps>(), {
-  size: '16'
+  size: '16',
 })
 
 const icon = defineAsyncComponent(() => import(`../../assets/icons/${props.name}.svg`))

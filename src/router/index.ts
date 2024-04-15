@@ -10,15 +10,15 @@ const router = createRouter({
       name: 'home',
       component: () => import('@/views/Home.vue'),
       meta: {
-        layout: LayoutTypes.Calendar
-      }
+        layout: LayoutTypes.Calendar,
+      },
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('@/views/About.vue')
-    }
-  ]
+      component: () => import('@/views/About.vue'),
+    },
+  ],
 })
 
 router.beforeEach(loadLayoutMiddleware)

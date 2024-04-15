@@ -13,8 +13,8 @@ describe('AppButton', () => {
   it('should render text', () => {
     const wrapper = shallowMount(AppButton, {
       slots: {
-        default: 'Button text'
-      }
+        default: 'Button text',
+      },
     })
 
     expect(wrapper.text()).toBe('Button text')
@@ -30,13 +30,13 @@ describe('AppButton', () => {
   it('renders as a RouterLink', () => {
     const wrapper = shallowMount(AppButton, {
       props: {
-        to: '/about/'
+        to: '/about/',
       },
       global: {
         stubs: {
-          RouterLink: RouterLinkStub
-        }
-      }
+          RouterLink: RouterLinkStub,
+        },
+      },
     })
 
     expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/about/')
@@ -46,13 +46,13 @@ describe('AppButton', () => {
     const wrapper = shallowMount(AppButton, {
       props: {
         to: '/',
-        target: '__blank'
+        target: '__blank',
       },
       global: {
         stubs: {
-          RouterLink: RouterLinkStub
-        }
-      }
+          RouterLink: RouterLinkStub,
+        },
+      },
     })
 
     expect(wrapper.findComponent(RouterLinkStub).attributes().target).toBe('__blank')
@@ -61,16 +61,16 @@ describe('AppButton', () => {
   it('renders icon when icon prop is provided', () => {
     const wrapper = shallowMount(AppButton, {
       props: {
-        icon: 'notification'
+        icon: 'notification',
       },
     })
 
-    expect(wrapper.findComponent(SvgIcon).exists()).toBeTruthy();
+    expect(wrapper.findComponent(SvgIcon).exists()).toBeTruthy()
   })
 
   it('does not render icon when icon prop is not provided', () => {
     const wrapper = shallowMount(AppButton, {})
 
-    expect(wrapper.findComponent(SvgIcon).exists()).toBeFalsy();
+    expect(wrapper.findComponent(SvgIcon).exists()).toBeFalsy()
   })
 })
