@@ -1,3 +1,3 @@
 {
-  "*": ["eslint . --ignore-path .gitignore", "prettier --write --ignore-path .gitignore"]
+  "*": ["eslint . --ignore-path .gitignore", "prettier --check --ignore-path .gitignore"]
 }
