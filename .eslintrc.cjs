@@ -18,4 +18,11 @@ module.exports = {
     'vue/multi-word-component-names': 0,
     'tailwindcss/no-custom-classname': 0,
   },
+  overrides: [
+    {
+      files: '*.json',
+      parser: 'jsonc-eslint-parser',
+      rules: {},
+    },
+  ],
 }
