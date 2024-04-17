@@ -10,26 +10,16 @@ describe('SvgIcon', () => {
       },
     })
 
-    expect(wrapper.exists()).toBeTruthy()
+    console.log('wrapper', wrapper.findComponent(SvgIcon).html())
+
+    expect(wrapper.attributes().width).toBeTruthy()
+    expect(wrapper.attributes().height).toBeTruthy()
   })
 
-  it('does not render when name prop is not provided', () => {
-    const wrapper = shallowMount(SvgIcon, {
-      props: {
-        name: 'notification',
-      },
-    })
+  it('return false if required prop "name" is missing', () => {
+    const wrapper = shallowMount(SvgIcon)
 
-    expect(wrapper.exists()).toBeTruthy()
-  })
-
-  it('does not render when name prop is wrong', () => {
-    const wrapper = shallowMount(SvgIcon, {
-      props: {
-        name: 'someiconname',
-      },
-    })
-
-    expect(wrapper.exists()).toBeTruthy()
+    expect(wrapper.attributes().width).toBeFalsy()
+    expect(wrapper.attributes().height).toBeFalsy()
   })
 })
