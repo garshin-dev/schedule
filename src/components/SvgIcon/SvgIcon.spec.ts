@@ -22,4 +22,14 @@ describe('SvgIcon', () => {
 
     expect(wrapper.exists()).toBeTruthy()
   })
+
+  it('does not render when name prop is wrong', () => {
+    const wrapper = shallowMount(SvgIcon, {
+      props: {
+        name: 'someiconname',
+      },
+    })
+
+    expect(wrapper.exists()).toBeTruthy()
+  })
 })
