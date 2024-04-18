@@ -4,13 +4,13 @@ import AppButton from './AppButton.vue'
 import SvgIcon from '@/components/SvgIcon'
 
 describe('AppButton', () => {
-  it('renders', () => {
+  it('renders component correctly', () => {
     const wrapper = shallowMount(AppButton)
 
     expect(wrapper.exists()).toBeTruthy()
   })
 
-  it('renders text', () => {
+  it('renders text correctly', () => {
     const wrapper = shallowMount(AppButton, {
       slots: {
         default: 'Button text',
