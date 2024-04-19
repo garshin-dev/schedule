@@ -4,7 +4,7 @@ import AppCheckbox from '@/components/AppCheckbox'
 import { ref } from 'vue'
 
 const serviceCheckbox = ref<boolean>(false)
-const isServiceCheckboxDisabled = ref<boolean>(true)
+const isServiceCheckboxDisabled = ref<boolean>(false)
 </script>
 
 <template>
