@@ -4,16 +4,21 @@ import AppCheckbox from '@/components/AppCheckbox'
 import { ref } from 'vue'
 
 const serviceCheckbox = ref<boolean>(false)
+const isServiceCheckboxDisabled = ref<boolean>(true)
 </script>
 
 <template>
-  <div class="text-red-600">
+  <div>
     <h1>This is a home page</h1>
     <div class="flex flex-col">
       <AppButton icon="notification"> Btn with icon </AppButton>
     </div>
     <div>
-      <AppCheckbox v-model="serviceCheckbox" label="выбрать услугу" />
+      <AppCheckbox
+        v-model="serviceCheckbox"
+        :disabled="isServiceCheckboxDisabled"
+        label="выбрать услугу"
+      />
 
       serviceCheckbox: {{ serviceCheckbox }}
     </div>
