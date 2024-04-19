@@ -1,15 +1,8 @@
 <template>
-  <div>
-    <label :for="id">
-      <input type="checkbox" v-model="modelValue" :disabled="disabled" name="name" :id="id" />
-      <span
-        :class="{
-          'text-gray-500': disabled,
-        }"
-        >{{ label }}</span
-      >
-    </label>
-  </div>
+  <label :for="id">
+    <input type="checkbox" v-model="modelValue" :disabled="disabled" name="name" :id="id" />
+    <span :class="{ 'text-gray-500': disabled }">{{ label }}</span>
+  </label>
 </template>
 
 <script setup lang="ts">
