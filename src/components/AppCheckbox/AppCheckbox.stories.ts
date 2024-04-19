@@ -14,4 +14,30 @@ export default meta
 
 type Story = StoryObj<typeof AppCheckbox>
 
-export const Checkbox: Story = {}
+export const DefaultCheckbox: Story = {
+  args: {
+    label: 'label',
+  },
+}
+
+export const CheckedCheckbox: Story = {
+  args: {
+    modelValue: true,
+    label: 'label',
+  },
+}
+
+export const DisabledCheckbox: Story = {
+  args: {
+    disabled: true,
+    label: 'label',
+  },
+}
+
+export const CheckedAndDisabledCheckbox: Story = {
+  args: {
+    modelValue: true,
+    disabled: true,
+    label: 'label',
+  },
+}
