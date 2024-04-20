@@ -17,6 +17,12 @@ export default {
       'gray-primary': '#A8B3CC',
       'gray-secondary': '#D9D9D9',
     },
+    fontSize: {
+      'sm': ['0.75rem'],
+      'md': ['1rem'],
+      'lg': ['1.25rem'],
+      'xl': ['1.5rem'],
+    },
     extend: {},
   },
   plugins: [],
