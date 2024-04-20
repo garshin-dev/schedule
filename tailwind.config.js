@@ -4,6 +4,9 @@ export default {
     "./index.html",
     "./src/**/*.{vue,js,ts}",
   ],
+  future: {
+    hoverOnlyWhenSupported: true
+  },
   theme: {
     extend: {},
   },
