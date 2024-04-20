@@ -8,12 +8,13 @@
       name="name"
       :id="id"
     />
+    <span class="peer-disabled:border-gray-2"></span>
     <span
-      class="border-amber-500 flex size-5 min-w-5 items-center justify-center rounded border border-gray-secondary transition duration-300 group-hover:border-blue peer-checked:border-blue peer-checked:bg-blue peer-disabled:bg-gray-secondary peer-checked:[&>*]:opacity-100"
+      class="border-amber-500 mt-0.5 flex size-5 min-w-5 items-center justify-center rounded border border-gray-2 transition duration-300 group-hover:enabled:border-blue peer-checked:border-blue peer-checked:bg-blue peer-disabled:border-gray-2 peer-disabled:bg-gray-2 peer-checked:[&>*]:opacity-100"
     >
       <SvgIcon name="checkbox" class="opacity-0" />
     </span>
-    <span class="text-md peer-disabled:text-gray-secondary">{{ label }}</span>
+    <span class="text-md peer-disabled:text-gray-2">{{ label }}</span>
   </label>
 </template>
 

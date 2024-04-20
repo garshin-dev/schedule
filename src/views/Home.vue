@@ -10,7 +10,7 @@ const isServiceCheckboxDisabled = ref<boolean>(false)
 <template>
   <div>
     <h1>This is a home page</h1>
-    <div class="flex flex-col">
+    <div class="inline-flex flex-col">
       <AppButton icon="notification"> Btn with icon </AppButton>
     </div>
     <div>

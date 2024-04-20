@@ -4,10 +4,11 @@
     :to="to"
     :disabled="disabled"
     :target="target"
-    class="px-4 py-2 text-white"
+    class="inline-flex items-center gap-2 rounded px-4 py-2 text-white transition duration-300"
     :class="{
-      'bg-blue-400 hover:bg-blue-700': type === 'primary',
-      'bg-red-400 hover:bg-red-700': type === 'secondary',
+      'bg-blue hover:bg-blue-hover': type === 'primary',
+      'bg-black hover:bg-black-hover': type === 'secondary',
+      'bg-red hover:bg-red-hover': type === 'danger',
     }"
   >
     <SvgIcon v-if="icon" :name="icon" />
@@ -19,7 +20,7 @@
 import SvgIcon from '@/components/SvgIcon'
 
 interface ButtonProps {
-  type?: 'primary' | 'secondary'
+  type?: 'primary' | 'secondary' | 'danger'
   to?: string | null
   disabled?: boolean
   target?: string | null

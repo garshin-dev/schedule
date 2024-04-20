@@ -28,6 +28,13 @@ export const Secondary: Story = {
   },
 }
 
+export const Danger: Story = {
+  args: {
+    default: 'Button',
+    type: 'danger',
+  },
+}
+
 export const Link: Story = {
   args: {
     default: 'Button',
