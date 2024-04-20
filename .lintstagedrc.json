@@ -1,5 +1,5 @@
 {
-  "src/**": [
+  "src/**/*.{js,ts,vue}": [
     "eslint --fix --ignore-path .gitignore",
     "prettier --write --ignore-path .gitignore"
   ]
