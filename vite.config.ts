@@ -8,7 +8,23 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [
     vue(),
-    svgLoader()
+    svgLoader({
+      svgoConfig: {
+        plugins: [
+          {
+            name: 'preset-default',
+            params: {
+              overrides: {
+                convertColors: {
+                  currentColor: true,
+                },
+                removeViewBox: false,
+              },
+            },
+          },
+        ],
+      },
+    })
   ],
   resolve: {
     alias: {

@@ -10,18 +10,23 @@ export default {
   theme: {
     colors: {
       'white': '#fff',
-      'black': '#333D54',
-      'red': '#FE4B4B',
       'green': '#28F995',
+      'black': '#333D54',
+      'black-hover': '#222939',
+      'red': '#FE4B4B',
+      'red-hover': '#E13434',
       'blue': '#3965FF',
-      'gray-primary': '#A8B3CC',
-      'gray-secondary': '#D9D9D9',
+      'blue-hover': '#3156D8',
+      'gray': {
+        DEFAULT: '#A8B3CC',
+        2: '#D9D9D9'
+      },
     },
     fontSize: {
-      'sm': ['0.75rem'],
-      'md': ['1rem'],
-      'lg': ['1.25rem'],
-      'xl': ['1.5rem'],
+      'sm': ['0.75rem', '1red'],
+      'md': ['1rem', '1.25rem'],
+      'lg': ['1.25rem', '1.5rem'],
+      'xl': ['1.5rem', '1.75rem'],
     },
     extend: {},
   },
