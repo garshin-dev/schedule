@@ -3,7 +3,8 @@ export default {
   theme: {
     colors: {
       white: '#FFFFFF',
-      black: '#151414'
+      black: '#131E3A',
+      tur: '#28cdbe',
     },
   },
   future: {
