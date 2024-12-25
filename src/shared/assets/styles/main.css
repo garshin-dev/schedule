@@ -1,0 +1,3 @@
+.anim {
+  @apply transition duration-300;
+}
