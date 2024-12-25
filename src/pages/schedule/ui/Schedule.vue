@@ -1,0 +1,143 @@
+<template>
+  <div class="px-3 pt-4 flex flex-col items-start">
+
+    <div class="flex flex-col gap-2">
+      <Button>Some primary</Button>
+      <Button variant="secondary">Some secondary</Button>
+      <Button variant="outline">Some outline</Button>
+    </div>
+
+    <div class="grid grid-cols-7 w-full pl-14" :style="{ gridTemplateColumns: `repeat(${CURRENT_DAYS.length}, minmax(0, 1fr))` }">
+      <div class="text-center border-b border-b-black/10 pb-2" v-for="date in CURRENT_DAYS" :key="date.toString()">
+        <button
+          class="uppercase w-full h-auto flex flex-col gap-1 items-center anim hover:bg-black/10 rounded-md"
+          :class="[isCurrentDay(date) ? 'text-black' : 'text-black/30 hover:text-black/50']"
+        >
+          <span class="text-4xl font-bold">
+            {{ getDayByDate(date) }}
+          </span>
+          <span>
+            {{ getDayOfWeekByDate(date) }}
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="flex w-full">
+      <div class="flex flex-col items-start border-r border-r-black/10 min-w-14">
+        <span
+          v-for="hour in HOURS"
+          :key="hour"
+          class="text-black/80 flex items-center justify-center"
+          :style="{ minHeight: DEFAULT_CELL_HEIGHT + 'px' }"
+        >
+          {{ hour }}
+        </span>
+      </div>
+      <div class="w-full h-full">
+        <div class="grid grid-cols-7 w-full" :style="{ gridTemplateColumns: `repeat(${CURRENT_DAYS.length}, minmax(0, 1fr))` }">
+          <div v-for="(date, index) in CURRENT_DAYS" :key="date.toString()" class="border-r border-r-black/10">
+            <div
+              class="flex uppercase text-center border-b border-b-black/10 relative p-2"
+              :style="{ minHeight: DEFAULT_CELL_HEIGHT + 'px' }"
+              v-for="(hour, index2) in HOURS"
+              :key="hour"
+            >
+              <button
+                class="h-auto z-10 bg-[#fa934b] text-white rounded-xl absolute w-[calc(100%-1rem)] anim border hover:border-[#e54c04]"
+                :style="{ height: `calc(120px - 1rem)` }"
+                v-if="index === 2 && index2 === 2"
+              >
+                Event #4
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+const DEFAULT_CELL_HEIGHT = 60
+const CURRENT_YEAR: number = getCurrentYear()
+const CURRENT_MONTH: Date = getCurrentMonthDate()
+const START_DATE: Date = new Date()
+const CURRENT_DAYS: Date[] = getCurrentWeekDates(START_DATE)
+const HOURS: string[] = [
+  "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
+  "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"
+];
+
+const CURRENT_DAYS_IN_MONTH: number = getDaysInMonth(CURRENT_YEAR, CURRENT_MONTH)
+const MONTHS: string[] = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december"
+];
+
+function getDaysInMonth(year: number, month: Date): number {
+  return new Date(year, month.getMonth() + 1, 0).getDate();
+}
+
+function getCurrentWeekDates(startDate?: Date) {
+  const firstDayOfWeek = startDate || new Date();
+  const COUNT = 7 - firstDayOfWeek.getDay() + 1
+  const weekDates = [];
+
+  console.log('firstDayOfWeek !!! COUNT', COUNT)
+
+  for (let i = 0; i < COUNT; i++) {
+    const day = new Date(firstDayOfWeek);
+    day.setDate(firstDayOfWeek.getDate() + i);
+    weekDates.push(day);
+  }
+
+  return weekDates;
+}
+
+function getDayByDate(date: Date) {
+  return date.getDate()
+}
+
+function getDayOfWeekByDate(date: Date) {
+  const WEEKS: string[] = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+  ];
+
+  return WEEKS[date.getDay()]
+}
+
+function getCurrentMonthDate() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), 1);
+}
+
+function getCurrentYear() {
+  return new Date().getFullYear()
+}
+
+function isCurrentDay(date: Date) {
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+}
+</script>
