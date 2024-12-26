@@ -5,6 +5,7 @@ export default {
       white: '#FFFFFF',
       black: '#131E3A',
       tur: '#28cdbe',
+      transparent: 'transparent'
     },
   },
   future: {
