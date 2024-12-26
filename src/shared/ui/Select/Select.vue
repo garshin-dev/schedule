@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-1 relative">
+  <div class="flex flex-col gap-1 relative" ref="selectRef">
     <div class="flex" @click="toggleDropdown">
       <input
         type="text"
@@ -8,6 +8,7 @@
         :value="selectedItem?.name || ''"
         readonly
         @keydown.enter="toggleDropdown"
+        @keydown.esc="closeDropdown"
       >
     </div>
     <Transition
@@ -37,6 +38,7 @@
 
 <script setup lang="ts">
 import type { Item } from './select.type'
+import { onClickOutside } from '@vueuse/core'
 
 interface Props {
   placeholder: string
@@ -51,6 +53,8 @@ const emit = defineEmits<Emits>()
 
 const modelItems = defineModel<Item[]>({ required: true })
 
+const selectRef = ref<HTMLDivElement>()
+
 const isShow = ref<boolean>(false)
 const selectedItem = computed(() => modelItems.value.find(item => item.selected))
 
@@ -58,8 +62,12 @@ const toggleDropdown = () => {
   isShow.value = !isShow.value
 }
 
-const selectHandler = (item: Item) => {
+const closeDropdown = () => {
   isShow.value = false
+}
+
+const selectHandler = (item: Item) => {
+  closeDropdown()
 
   modelItems.value.forEach(modelItem => {
     modelItem.selected = modelItem.value === item.value
@@ -67,4 +75,8 @@ const selectHandler = (item: Item) => {
 
   emit('select', item)
 }
+
+onClickOutside(selectRef, () => {
+  closeDropdown()
+})
 </script>
