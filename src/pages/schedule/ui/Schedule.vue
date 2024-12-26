@@ -1,7 +1,10 @@
 <template>
   <div class="px-3 pt-4 flex flex-col items-start">
+    <div class="flex mt-4">
+      <Select placeholder="Choose" v-model="items" />
+    </div>
 
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 mt-4 mb-4">
       <Button>Some primary</Button>
       <Button variant="secondary">Some secondary</Button>
       <Button variant="outline">Some outline</Button>
@@ -10,8 +13,8 @@
     <div class="grid grid-cols-7 w-full pl-14" :style="{ gridTemplateColumns: `repeat(${CURRENT_DAYS.length}, minmax(0, 1fr))` }">
       <div class="text-center border-b border-b-black/10 pb-2" v-for="date in CURRENT_DAYS" :key="date.toString()">
         <button
-          class="uppercase w-full h-auto flex flex-col gap-1 items-center anim hover:bg-black/10 rounded-md"
-          :class="[isCurrentDay(date) ? 'text-black' : 'text-black/30 hover:text-black/50']"
+          class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md"
+          :class="[isCurrentDay(date) ? 'text-black' : 'text-black/30 hover:text-black/50 anim hover:bg-black/10']"
         >
           <span class="text-4xl font-bold">
             {{ getDayByDate(date) }}
@@ -43,11 +46,14 @@
               :key="hour"
             >
               <button
-                class="h-auto z-10 bg-[#fa934b] text-white rounded-xl absolute w-[calc(100%-1rem)] anim border hover:border-[#e54c04]"
-                :style="{ height: `calc(120px - 1rem)` }"
                 v-if="index === 2 && index2 === 2"
+                class="bg-white z-10 flex flex-col absolute left-0 top-0 size-full group p-2"
+                :style="{ height: `calc(180px - 1px)` }"
               >
-                Event #4
+                <span class="flex flex-col items-start bg-[#fa934b]/30 size-full text-black px-3 py-2 rounded-xl anim group-hover:border-[#fa934b] border-2 border-transparent">
+                  <span>Weekly team meeting</span>
+                  <span class="text-black/60">14:30 - 15:20</span>
+                </span>
               </button>
             </div>
           </div>
@@ -58,6 +64,8 @@
 </template>
 
 <script setup lang="ts">
+import type {Item} from "@/shared/ui/Select/select.type.ts";
+
 const DEFAULT_CELL_HEIGHT = 60
 const CURRENT_YEAR: number = getCurrentYear()
 const CURRENT_MONTH: Date = getCurrentMonthDate()
@@ -84,18 +92,53 @@ const MONTHS: string[] = [
   "december"
 ];
 
+enum TimeUnits {
+  Day = 'day',
+  Days = 'days',
+  Week = 'week',
+  Month = 'month',
+  Year = 'year'
+}
+
+const items = ref<Item[]>([
+  {
+    name: 'Day',
+    value: TimeUnits.Day,
+    selected: false
+  },
+  {
+    name: `${CURRENT_DAYS.length} days`,
+    value: TimeUnits.Days,
+    selected: true
+  },
+  {
+    name: 'Week',
+    value: TimeUnits.Week,
+    selected: false
+  },
+  {
+    name: 'Month',
+    value: TimeUnits.Month,
+    selected: false
+  },
+  {
+    name: 'Year',
+    value: TimeUnits.Year,
+    selected: false
+  },
+])
+
 function getDaysInMonth(year: number, month: Date): number {
   return new Date(year, month.getMonth() + 1, 0).getDate();
 }
 
 function getCurrentWeekDates(startDate?: Date) {
   const firstDayOfWeek = startDate || new Date();
-  const COUNT = 7 - firstDayOfWeek.getDay() + 1
+  const day = firstDayOfWeek.getDay()
+  const count = day > 1 ? 7 - day + 1 : 7
   const weekDates = [];
 
-  console.log('firstDayOfWeek !!! COUNT', COUNT)
-
-  for (let i = 0; i < COUNT; i++) {
+  for (let i = 0; i < count; i++) {
     const day = new Date(firstDayOfWeek);
     day.setDate(firstDayOfWeek.getDate() + i);
     weekDates.push(day);
