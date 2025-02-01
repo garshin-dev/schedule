@@ -16,6 +16,7 @@ coverage
 
 /cypress/videos/
 /cypress/screenshots/
+/api/postgres-data
 
 # Editor directories and files
 .vscode/*
@@ -28,3 +29,5 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+ROADMAP.md
