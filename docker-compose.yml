@@ -1,12 +1,41 @@
 services:
   postgres:
-    container_name: postgres_go
+    container_name: ${DB_CONTAINER_NAME}
     image: postgres:16.4
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: my_pass
-      PGDATA: /data/postgres
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: ${DB_DATA_PATH}
     volumes:
       - ./api/postgres-data:/data/postgres
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:${DB_PORT}"
+  app:
+    container_name: ${BACKEND_CONTAINER_NAME}
+    image: golang:1.23
+    working_dir: /app
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_CONTAINER_NAME=${DB_CONTAINER_NAME}
+      - BACKEND_PORT=${BACKEND_PORT}
+    volumes:
+      - ./api:/app
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    command: go run .
+    depends_on:
+      - postgres
+  frontend:
+    container_name: ${FRONTEND_CONTAINER_NAME}
+    build:
+      context: .
+    working_dir: /app
+    environment:
+      - VITE_API_URL=http://localhost:${BACKEND_PORT}  # Если фронту нужно знать API
+    volumes:
+      - ./:/app
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    command: sh -c "pnpm run dev"
