@@ -72,6 +72,7 @@
 </template>
 
 <script setup lang="ts">
+import {axios} from "@/shared/config/axios"
 import type {Item} from "@/shared/ui/Select/select.type.ts";
 
 const DEFAULT_CELL_HEIGHT = 60
