@@ -10,7 +10,7 @@ services:
       - ./api/postgres-data:/data/postgres
     ports:
       - "${DB_PORT}:${DB_PORT}"
-  app:
+  backend:
     container_name: ${BACKEND_CONTAINER_NAME}
     build:
       context: ./api
