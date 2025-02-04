@@ -34,19 +34,29 @@ func main() {
 
 	defer db.Close()
 
-	router := mux.NewRouter()
+	router := mux.NewRouter().PathPrefix("/api").Subrouter()
 	router.HandleFunc("/users", getUsers(db)).Methods("GET")
 	// router.HandleFunc("/users/${id}", getUsers(db)).Methods("GET")
 	// router.HandleFunc("/users", getUsers(db)).Methods("POST")
 	// router.HandleFunc("/users/{id}", getUsers(db)).Methods("PUT")
 	// router.HandleFunc("/users/{id}", getUsers(db)).Methods("DELETE")
 
-	log.Fatal(http.ListenAndServe(":"+PORT, jsonContentTypeMiddleware(router)))
+	log.Fatal(http.ListenAndServe(":"+PORT, corsMiddleware(router)))
 }
 
-func jsonContentTypeMiddleware(next http.Handler) http.Handler {
+func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*") // Разрешает запросы с любого источника
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		// Если это preflight-запрос (OPTIONS), просто завершаем его
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
 		next.ServeHTTP(w, r)
 	})
 }
