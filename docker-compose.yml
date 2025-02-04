@@ -12,7 +12,8 @@ services:
       - "${DB_PORT}:${DB_PORT}"
   app:
     container_name: ${BACKEND_CONTAINER_NAME}
-    image: golang:1.23
+    build:
+      context: ./api
     working_dir: /app
     environment:
       - DB_USER=${DB_USER}
@@ -24,7 +25,7 @@ services:
       - ./api:/app
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
-    command: go run .
+    command: sh -c "air"
     depends_on:
       - postgres
   frontend:
@@ -36,6 +37,7 @@ services:
       - VITE_API_URL=http://localhost:${BACKEND_PORT}  # Если фронту нужно знать API
     volumes:
       - ./:/app
+      - /app/node_modules
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     command: sh -c "pnpm run dev"
