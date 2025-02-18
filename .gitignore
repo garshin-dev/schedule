@@ -17,6 +17,7 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 /api/postgres-data
+/api/tmp
 
 # Editor directories and files
 .vscode/*
