@@ -1,8 +1,5 @@
 <template>
   <div class="px-3 py-4 flex flex-col items-start">
-    <Button @click="somemessage">Click</Button>
-    <Button @click="somemessage2">Click user</Button>
-
     <div class="flex mt-4">
       <Select
         placeholder="Choose"
@@ -361,23 +358,5 @@ function selectDay(date: Date) {
   })
 
   CURRENT_DAYS.value = getCurrentDates(1, date)
-}
-
-async function somemessage () {
-  const { data, status } = await axios.get('/users');
-
-  console.log('data', data);
-  console.log('status', status);
-}
-
-async function somemessage2 () {
-  try {
-    const { data, status } = await axios.get('/users/1');
-
-    console.log('data', data);
-    console.log('status', status);
-  } catch (e) {
-    console.log('e', e);
-  }
 }
 </script>
