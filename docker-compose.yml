@@ -34,7 +34,7 @@ services:
       context: .
     working_dir: /app
     environment:
-      - VITE_API_URL=http://localhost:${BACKEND_PORT}  # Если фронту нужно знать API
+      - VITE_API_URL=http://localhost:${BACKEND_PORT}
     volumes:
       - ./:/app
       - /app/node_modules
