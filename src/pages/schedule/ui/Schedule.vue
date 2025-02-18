@@ -1,5 +1,8 @@
 <template>
   <div class="px-3 py-4 flex flex-col items-start">
+    <Button @click="somemessage">Click</Button>
+    <Button @click="somemessage2">Click user</Button>
+
     <div class="flex mt-4">
       <Select
         placeholder="Choose"
@@ -16,56 +19,100 @@
 
     currentTimeUnit: {{ currentTimeUnit.name }}
 
-    <div class="grid grid-cols-7 w-full pl-14" :style="{ gridTemplateColumns: `repeat(${CURRENT_DAYS.length}, minmax(0, 1fr))` }">
-      <div class="text-center border-b border-b-black/10 pb-2" v-for="date in CURRENT_DAYS" :key="date.toString()">
-        <button
-          class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md"
-          :class="[isCurrentDay(date) ? 'text-black pointer-events-none' : 'text-black/30 hover:text-black/50 anim hover:bg-black/10']"
-        >
-          <span class="text-4xl font-bold">
-            {{ getDayByDate(date) }}
-          </span>
-          <span>
-            {{ getDayOfWeekByDate(date) }}
-          </span>
-        </button>
-      </div>
+    <div class="flex flex-col w-full" v-if="currentTimeUnit.value === TimeUnits.Year">
+      YEAR
     </div>
-    <div class="flex w-full">
-      <div class="flex flex-col items-start border-r border-r-black/10 min-w-14">
-        <span
-          v-for="hour in HOURS"
-          :key="hour"
-          class="text-black/80 flex items-start justify-center"
-          :style="{ minHeight: DEFAULT_CELL_HEIGHT + 'px' }"
-        >
-          <span class="-mt-3.5">
-            {{ hour }}
-          </span>
-        </span>
-      </div>
-      <div class="w-full h-full">
-        <div class="grid grid-cols-7 w-full" :style="{ gridTemplateColumns: `repeat(${CURRENT_DAYS.length}, minmax(0, 1fr))` }">
-          <div v-for="(date, index) in CURRENT_DAYS" :key="date.toString()" class="border-r border-r-black/10">
-            <div
-              class="flex uppercase text-center border-b border-b-black/10 relative p-2"
-              :style="{ minHeight: DEFAULT_CELL_HEIGHT + 'px' }"
-              v-for="(hour, index2) in HOURS"
-              :key="hour"
-            >
-              <button
-                v-if="index === 2 && index2 === 2"
-                class="bg-white z-10 flex flex-col absolute left-0 top-0 size-full group p-2"
-                :style="{ height: `calc(180px - 1px)` }"
-              >
-                <span class="flex flex-col items-start text-left bg-[#fa934b]/30 size-full text-black px-3 py-2 rounded-xl anim group-hover:border-[#fa934b] border-2 border-transparent">
-                  <span>Weekly team meeting</span>
-                  <span class="text-black/60">14:30 - 15:20</span>
-                </span>
-              </button>
-            </div>
+    <div class="flex flex-col w-full" v-else-if="currentTimeUnit.value === TimeUnits.Month">
+      <div class="grid grid-cols-7 w-full" :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }">
+        <div class="text-center border-b border-b-black/10 pb-2" v-for="dayOfWeek in WEEKS" :key="dayOfWeek">
+          <div
+            class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md anim text-black"
+          >
+            <span>
+              {{ dayOfWeek }}
+            </span>
           </div>
         </div>
+      </div>
+      <div class="grid grid-cols-7 w-full" :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }">
+        <div
+          v-for="col in CURRENT_DAYS" :key="col.toString()"
+          class="border-r border-b border-b-black/10 border-r-black/10 flex items-center justify-center"
+          :style="{ minHeight: DEFAULT_MONTH_CELL_HEIGHT + 'px' }"
+        >
+          {{ col.getDate() }}
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col w-full" v-else>
+      <div class="grid grid-cols-7 w-full pl-14" :style="{ gridTemplateColumns: `repeat(${CURRENT_DAYS.length}, minmax(0, 1fr))` }">
+        <div class="text-center border-b border-b-black/10 pb-2" v-for="date in CURRENT_DAYS" :key="date.toString()">
+          <button
+            class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md anim hover:bg-black/10"
+            :class="{
+              [isCurrentDay(date) ? 'text-black' : 'text-black/30 hover:text-black/50']: true,
+              'pointer-events-none': CURRENT_DAYS.length === 1
+            }"
+            @click="selectDay(date)"
+          >
+            <span class="text-4xl font-bold">
+              {{ getDayByDate(date) }}
+            </span>
+              <span>
+              {{ getDayOfWeekByDate(date) }}
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="flex w-full">
+        <div class="flex flex-col items-start border-r border-r-black/10 min-w-14">
+          <span
+            v-for="hour in HOURS"
+            :key="hour"
+            class="text-black/80 flex items-start justify-center"
+            :style="{ minHeight: DEFAULT_WEEK_CELL_HEIGHT + 'px' }"
+          >
+            <span class="-mt-3.5">
+              {{ hour }}
+            </span>
+          </span>
+          </div>
+          <div class="w-full h-full">
+            <div class="grid grid-cols-7 w-full" :style="{ gridTemplateColumns: `repeat(${CURRENT_DAYS.length}, minmax(0, 1fr))` }">
+              <div v-for="date in CURRENT_DAYS" :key="date.toString()" class="border-r border-r-black/10">
+                <div
+                  class="flex uppercase text-center border-b border-b-black/10 relative"
+                  :style="{ minHeight: DEFAULT_WEEK_CELL_HEIGHT + 'px' }"
+                  v-for="hour in HOURS"
+                  :key="hour"
+                >
+                  <button
+                    v-if="isEvent(date, hour)"
+                    class="bg-white z-10 flex flex-col absolute left-0 top-0 size-full"
+                    :style="{
+                      height: `calc(${getEventHeight(isEvent(date, hour))}px - 1px)`,
+                      marginTop: `${getEventOffset(isEvent(date, hour).timeStart)}px`
+                    }"
+                    @mouseover="isHovered = true"
+                    @mouseleave="isHovered = false"
+                  >
+                    <span
+                      class="flex flex-col items-start text-left size-full text-black px-3 py-2 rounded-xl anim border-2 border-transparent"
+                      :style="{
+                        backgroundColor: hexToRgba(isEvent(date, hour).background, 0.3),
+                        borderColor: isHovered ? isEvent(date, hour).background : ''
+                      }"
+                    >
+                      <span>{{ isEvent(date, hour).name }}</span>
+                      <span class="text-black/60">
+                        {{ isEvent(date, hour).timeStart }} - {{ isEvent(date, hour).timeEnd }}
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
     </div>
   </div>
@@ -75,7 +122,8 @@
 import {axios} from "@/shared/config/axios"
 import type {Item} from "@/shared/ui/Select/select.type.ts";
 
-const DEFAULT_CELL_HEIGHT = 60
+const DEFAULT_WEEK_CELL_HEIGHT = 60
+const DEFAULT_MONTH_CELL_HEIGHT = 90
 const CURRENT_YEAR: number = getCurrentYear()
 const CURRENT_MONTH: Date = getCurrentMonthDate()
 const CURRENT_DAYS = ref<Date[]>(getCurrentDates())
@@ -84,7 +132,18 @@ const HOURS: string[] = [
   "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"
 ];
 
-const CURRENT_DAYS_IN_MONTH: number = getDaysInMonth(CURRENT_YEAR, CURRENT_MONTH)
+const isHovered = ref<boolean>(false)
+
+function hexToRgba(hex: string, opacity: number) {
+  hex = hex.replace('#', '');
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
 const MONTHS: string[] = [
   "january",
   "february",
@@ -98,6 +157,16 @@ const MONTHS: string[] = [
   "october",
   "november",
   "december"
+];
+
+const WEEKS: string[] = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
 ];
 
 enum TimeUnits {
@@ -136,41 +205,105 @@ const items = ref<Item[]>([
   },
 ])
 
+const MOCK_TIMES = [
+  {
+    id: 1,
+    name: 'Weekly team meeting',
+    date: new Date('2025.02.20'),
+    timeStart: '03:00',
+    timeEnd: '04:30',
+    background: '#fa934b',
+  },
+  {
+    id: 2,
+    name: 'Weekly team meeting 2',
+    date: new Date('2025.02.21'),
+    timeStart: '07:15',
+    timeEnd: '011:30',
+    background: '#d11c91',
+  }
+]
+
 const currentTimeUnit = computed((): Item => items.value.find(item => item.selected) as Item)
 
 function timeUnitHandler(item: Item) {
-  console.log('timeUnitHandler item', item)
-
   switch (item.value) {
     case TimeUnits.Day:
       CURRENT_DAYS.value = getCurrentDates(1)
-      console.log('!!!', CURRENT_DAYS.value)
       break;
     case TimeUnits.Days:
       CURRENT_DAYS.value = getCurrentDates()
       break;
     case TimeUnits.Week:
-      CURRENT_DAYS.value = getCurrentDates(7)
+      const today = new Date();
+      const firstDayOfWeek = getFirstDayOfWeek(today)
+      CURRENT_DAYS.value = getCurrentDates(7, firstDayOfWeek)
+      break;
+    case TimeUnits.Month:
+      const firstDayOfMonth = getFirstDayOfMonth(CURRENT_YEAR, CURRENT_MONTH)
+      const lastDayOfMonth = getLastDayOfMonth(CURRENT_YEAR, CURRENT_MONTH)
+      const firstDayOfWeekOfMonth = getFirstDayOfWeek(firstDayOfMonth)
+
+      const daysInMonth = getDaysInMonth(CURRENT_YEAR, CURRENT_MONTH)
+
+      const firstDayOfMonthNum = firstDayOfMonth.getDay()
+      const lastDayOfMonthNum = lastDayOfMonth.getDay()
+
+      const daysBefore = firstDayOfMonthNum === 0 ? 6 : firstDayOfMonthNum - 1;
+      const daysAfter = lastDayOfMonthNum === 0 ? 0 : 7 - lastDayOfMonthNum;
+
+      const totalCount = daysInMonth + daysBefore + daysAfter
+
+      CURRENT_DAYS.value = getCurrentDates(totalCount, firstDayOfWeekOfMonth)
       break;
   }
+}
+
+function isEvent(date: Date, hour: string) { // todo: optimize
+  const hourStart = hour.split(':')[0]
+
+  return MOCK_TIMES.find(item => {
+    const isYear = item.date.getFullYear() === date.getFullYear()
+    const isMonth = item.date.getMonth() === date.getMonth()
+    const isDay = item.date.getDate() === date.getDate()
+    const isTime = item.timeStart.split(':')[0] === hourStart
+
+    return isYear && isMonth && isDay && isTime
+  })
+}
+
+function getEventHeight({timeStart, timeEnd}: {timeStart: string, timeEnd: string}) {
+  const [timeStartHours, timeStartMinutes] = timeStart.split(':')
+  const [timeEndHours, timeEndMinutes] = timeEnd.split(':')
+
+  const hours = parseInt(timeEndHours) - parseInt(timeStartHours)
+  const minutes = parseInt(timeEndMinutes) - parseInt(timeStartMinutes)
+
+  const total = hours + minutes / 60
+
+  return total * DEFAULT_WEEK_CELL_HEIGHT
+}
+
+function getEventOffset(timeStart: string) {
+  const [_, minutes] = timeStart.split(':')
+  const value = parseInt(minutes) / 60
+
+  return value * DEFAULT_WEEK_CELL_HEIGHT
 }
 
 function getDaysInMonth(year: number, month: Date): number {
   return new Date(year, month.getMonth() + 1, 0).getDate();
 }
 
-function getCurrentDates(limit?: number, startDate?: Date) {
-  const firstDayOfWeek = startDate || new Date();
-  const day = firstDayOfWeek.getDay()
+function getCurrentDates(limit?: number, date?: Date) {
+  const firstDay = date || new Date();
+  const day = firstDay.getDay()
   const count = limit || (day > 1 ? 7 - day + 1 : 7)
   const weekDates = [];
 
-  console.log('getCurrentDates count', count)
-  console.log('getCurrentDates limit', limit)
-
   for (let i = 0; i < count; i++) {
-    const day = new Date(firstDayOfWeek);
-    day.setDate(firstDayOfWeek.getDate() + i);
+    const day = new Date(firstDay);
+    day.setDate(firstDay.getDate() + i);
     weekDates.push(day);
   }
 
@@ -182,17 +315,9 @@ function getDayByDate(date: Date) {
 }
 
 function getDayOfWeekByDate(date: Date) {
-  const WEEKS: string[] = [
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-  ];
+  const day = date.getDay()
 
-  return WEEKS[date.getDay()]
+  return WEEKS[day === 0 ? 6 : day - 1]
 }
 
 function getCurrentMonthDate() {
@@ -212,5 +337,47 @@ function isCurrentDay(date: Date) {
     date.getMonth() === today.getMonth() &&
     date.getDate() === today.getDate()
   );
+}
+
+function getFirstDayOfWeek(date: Date) {
+  const dateCopy = new Date(date)
+  const dayOfWeek = dateCopy.getDay();
+  const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+
+  return new Date(dateCopy.setDate(dateCopy.getDate() + diff));
+}
+
+function getFirstDayOfMonth(year: number, month: Date) {
+  return new Date(year, month.getMonth(), 1);
+}
+
+function getLastDayOfMonth(year: number, month: Date) {
+  return new Date(year, month.getMonth() + 1, 0)
+}
+
+function selectDay(date: Date) {
+  items.value.forEach(item => {
+    item.selected = item.value === TimeUnits.Day
+  })
+
+  CURRENT_DAYS.value = getCurrentDates(1, date)
+}
+
+async function somemessage () {
+  const { data, status } = await axios.get('/users');
+
+  console.log('data', data);
+  console.log('status', status);
+}
+
+async function somemessage2 () {
+  try {
+    const { data, status } = await axios.get('/users/1');
+
+    console.log('data', data);
+    console.log('status', status);
+  } catch (e) {
+    console.log('e', e);
+  }
 }
 </script>
