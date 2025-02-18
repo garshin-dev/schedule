@@ -36,10 +36,10 @@ func main() {
 
 	router := mux.NewRouter().PathPrefix("/api").Subrouter()
 	router.HandleFunc("/users", getUsers(db)).Methods("GET")
-	// router.HandleFunc("/users/${id}", getUsers(db)).Methods("GET")
-	// router.HandleFunc("/users", getUsers(db)).Methods("POST")
-	// router.HandleFunc("/users/{id}", getUsers(db)).Methods("PUT")
-	// router.HandleFunc("/users/{id}", getUsers(db)).Methods("DELETE")
+	router.HandleFunc("/users/{id}", getUser(db)).Methods("GET")
+	// router.HandleFunc("/users", createUser(db)).Methods("POST")
+	// router.HandleFunc("/users/{id}", updateUser(db)).Methods("PUT")
+  // router.HandleFunc("/users/{id}", deleteUser(db)).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":"+PORT, corsMiddleware(router)))
 }
@@ -63,7 +63,7 @@ func corsMiddleware(next http.Handler) http.Handler {
 
 func getUsers(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		rows, err := db.Query("SELECT * FROM users")
+		rows, err := db.Query("SELECT id, name, email FROM users")
 
 		if err != nil {
 			log.Fatal(err)
@@ -90,3 +90,51 @@ func getUsers(db *sql.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(users)
 	}
 }
+
+func getUser(db *sql.DB) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        params := mux.Vars(r)
+
+        id := params["id"]
+
+        row := db.QueryRow("SELECT id, name, email FROM users WHERE id=$1", id)
+
+        var user User
+
+        if err := row.Scan(&user.ID, &user.Name, &user.Email); err!= nil {
+            if err == sql.ErrNoRows {
+                http.Error(w, "User not found", http.StatusNotFound)
+                return
+            } else {
+                log.Fatal(err)
+            }
+        }
+
+        json.NewEncoder(w).Encode(user)
+    }
+}
+
+// func deleteUser(db *sql.DB) http.HandlerFunc {
+//     return func(w http.ResponseWriter, r *http.Request) {
+//         params := mux.Vars(r)
+//         id := params["id"]
+//
+//         result, err := db.Exec("DELETE FROM users WHERE id=$1", id)
+//
+//         if err != nil {
+//             log.Fatal(err)
+//         }
+//
+//         rowsAffected, err := result.RowsAffected()
+//         if err != nil {
+//             log.Fatal(err)
+//         }
+//
+//         if rowsAffected == 0 {
+//             http.Error(w, "User not found", http.StatusNotFound)
+//             return
+//         }
+//
+//         w.WriteHeader(http.StatusNoContent)
+//     }
+// }
