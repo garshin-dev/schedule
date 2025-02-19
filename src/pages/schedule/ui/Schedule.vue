@@ -39,7 +39,7 @@
         >
           <template v-if="isEvent(date)">
             <button
-              v-for="event in MOCK_EVENTS.filter(item => item.date.getTime() === date.getTime()).slice(0, 3)"
+              v-for="event in MOCK_EVENTS.filter(item => item.date.getTime() === date.getTime()).slice(0, MAX_MONTH_EVENT_COUNT)"
               class="bg-white z-10 flex flex-col size-full rounded-md h-auto"
               @mouseover="isHovered = true"
               @mouseleave="isHovered = false"
@@ -61,7 +61,7 @@
             <div class="mt-auto flex gap-1 py-1 px-2">
               <button
                 class="underline"
-                v-if="MOCK_EVENTS.filter(item => item.date.getTime() === date.getTime()).length > 3"
+                v-if="MOCK_EVENTS.filter(item => item.date.getTime() === date.getTime()).length > MAX_MONTH_EVENT_COUNT"
                 @click="selectDay(date)"
               >
                 Show more
@@ -69,7 +69,7 @@
               <button @click="selectDay(date)" class="ml-auto">{{ date.getDate() }}</button>
             </div>
           </template>
-          <button @click="selectDay(date)" class="text-right mt-auto py-1 px-2" v-else>{{ date.getDate() }}</button>
+          <button @click="selectDay(date)" class="text-right mt-auto py-1 px-2 ml-auto" v-else>{{ date.getDate() }}</button>
         </div>
       </div>
     </div>
@@ -117,10 +117,11 @@
                 >
                   <button
                     v-if="isEvent(date, hour)"
-                    class="bg-white z-10 flex flex-col absolute left-0 top-0 size-full rounded-xl"
+                    class="bg-white z-10 flex flex-col relative left-0 top-0 size-full rounded-xl"
                     :style="{
                       height: `calc(${getEventHeight(isEvent(date, hour))}px - 1px)`,
                       marginTop: `${getEventOffset(isEvent(date, hour).timeStart)}px`,
+                      marginLeft: `${isOverlapping(isEvent(date, hour))}px`,
                       outlineColor: isEvent(date, hour).background
                     }"
                     @mouseover="isHovered = true"
@@ -151,6 +152,7 @@
 <script setup lang="ts">
 import type {Item} from "@/shared/ui/Select/select.type.ts";
 
+const OVERLAPPING_OFFSET = 25
 const DEFAULT_WEEK_CELL_HEIGHT = 60
 const DEFAULT_MONTH_CELL_HEIGHT = 140
 const MAX_MONTH_EVENT_COUNT = 3
@@ -235,7 +237,16 @@ const items = ref<Item[]>([
   },
 ])
 
-const MOCK_EVENTS = [
+interface Event {
+  id: number
+  name: string
+  date: Date
+  timeStart: string
+  timeEnd: string
+  background: string
+}
+
+const MOCK_EVENTS: Event[] = [
   {
     id: 1,
     name: 'Weekly team meeting',
@@ -291,7 +302,39 @@ const MOCK_EVENTS = [
     timeStart: '14:15',
     timeEnd: '17:30',
     background: '#d1ad1c',
-  }
+  },
+  {
+    id: 7,
+    name: 'Weekly team meeting 2',
+    date: new Date('2025.02.11'),
+    timeStart: '12:15',
+    timeEnd: '19:45',
+    background: '#d1521c',
+  },
+  {
+    id: 8,
+    name: 'Weekly team meeting 23',
+    date: new Date('2025.02.11'),
+    timeStart: '18:15',
+    timeEnd: '19:25',
+    background: '#1cd1a1',
+  },
+  {
+    id: 9,
+    name: 'Weekly team meeting 7',
+    date: new Date('2025.02.11'),
+    timeStart: '16:00',
+    timeEnd: '17:00',
+    background: '#ff4949',
+  },
+  {
+    id: 10,
+    name: 'Weekly team meeting',
+    date: new Date('2025.02.11'),
+    timeStart: '17:15',
+    timeEnd: '18:10',
+    background: '#3bbd30',
+  },
 ]
 
 const currentTimeUnit = computed((): Item => items.value.find(item => item.selected) as Item)
@@ -340,6 +383,20 @@ function isEvent(date: Date, hour?: string) { // todo: optimize
 
     return isYear && isMonth && isDay && isTime
   })
+}
+
+function isOverlapping(event: Event) {
+  const count = MOCK_EVENTS.filter(item => {
+    const isYear = item.date.getFullYear() === event.date.getFullYear()
+    const isMonth = item.date.getMonth() === event.date.getMonth()
+    const isDay = item.date.getDate() === event.date.getDate()
+
+    const condition = event.timeStart >= item.timeStart && item.timeEnd > event.timeStart && event.id !== item.id
+
+    return isYear && isMonth && isDay && condition
+  })?.length
+
+  return count ? count * OVERLAPPING_OFFSET : 0
 }
 
 function getEventHeight({timeStart, timeEnd}: {timeStart: string, timeEnd: string}) {
