@@ -8,7 +8,7 @@
       />
     </div>
 
-    <div class="flex flex-col gap-2 mt-4 mb-4">
+    <div class="flex gap-2 mt-4 mb-4">
       <Button>Some primary</Button>
       <Button variant="secondary">Some secondary</Button>
       <Button variant="outline">Some outline</Button>
@@ -31,13 +31,45 @@
           </div>
         </div>
       </div>
-      <div class="grid grid-cols-7 w-full" :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }">
+      <div class="grid grid-cols-7 w-full border-l border-l-black/10" :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }">
         <div
-          v-for="col in CURRENT_DAYS" :key="col.toString()"
-          class="border-r border-b border-b-black/10 border-r-black/10 flex items-center justify-center"
-          :style="{ minHeight: DEFAULT_MONTH_CELL_HEIGHT + 'px' }"
+          v-for="date in CURRENT_DAYS" :key="date.toString()"
+          class="border-r border-b border-b-black/10 border-r-black/10 flex flex-col gap-1"
+          :style="{ height: DEFAULT_MONTH_CELL_HEIGHT + 'px' }"
         >
-          {{ col.getDate() }}
+          <template v-if="isEvent(date)">
+            <button
+              v-for="event in MOCK_EVENTS.filter(item => item.date.getTime() === date.getTime()).slice(0, 3)"
+              class="bg-white z-10 flex flex-col size-full rounded-md h-auto"
+              @mouseover="isHovered = true"
+              @mouseleave="isHovered = false"
+            >
+              <span
+                class="flex flex-col items-start text-left size-full text-black px-1 py-0.5 rounded-md anim border-2 border-transparent"
+                :style="{
+                  backgroundColor: hexToRgba(event.background, 0.3),
+                  borderColor: isHovered ? event.background : ''
+                }"
+              >
+                <span class="flex gap-1 w-full">
+                  <span class="text-black/60">{{ event.timeStart }}</span>
+                  <span class="truncate">{{ event.name }}</span>
+                </span>
+              </span>
+            </button>
+
+            <div class="mt-auto flex gap-1 py-1 px-2">
+              <button
+                class="underline"
+                v-if="MOCK_EVENTS.filter(item => item.date.getTime() === date.getTime()).length > 3"
+                @click="selectDay(date)"
+              >
+                Show more
+              </button>
+              <button @click="selectDay(date)" class="ml-auto">{{ date.getDate() }}</button>
+            </div>
+          </template>
+          <button @click="selectDay(date)" class="text-right mt-auto py-1 px-2" v-else>{{ date.getDate() }}</button>
         </div>
       </div>
     </div>
@@ -67,7 +99,7 @@
             v-for="hour in HOURS"
             :key="hour"
             class="text-black/80 flex items-start justify-center"
-            :style="{ minHeight: DEFAULT_WEEK_CELL_HEIGHT + 'px' }"
+            :style="{ height: DEFAULT_WEEK_CELL_HEIGHT + 'px' }"
           >
             <span class="-mt-3.5">
               {{ hour }}
@@ -79,16 +111,17 @@
               <div v-for="date in CURRENT_DAYS" :key="date.toString()" class="border-r border-r-black/10">
                 <div
                   class="flex uppercase text-center border-b border-b-black/10 relative"
-                  :style="{ minHeight: DEFAULT_WEEK_CELL_HEIGHT + 'px' }"
+                  :style="{ height: DEFAULT_WEEK_CELL_HEIGHT + 'px' }"
                   v-for="hour in HOURS"
                   :key="hour"
                 >
                   <button
                     v-if="isEvent(date, hour)"
-                    class="bg-white z-10 flex flex-col absolute left-0 top-0 size-full"
+                    class="bg-white z-10 flex flex-col absolute left-0 top-0 size-full rounded-xl"
                     :style="{
                       height: `calc(${getEventHeight(isEvent(date, hour))}px - 1px)`,
-                      marginTop: `${getEventOffset(isEvent(date, hour).timeStart)}px`
+                      marginTop: `${getEventOffset(isEvent(date, hour).timeStart)}px`,
+                      outlineColor: isEvent(date, hour).background
                     }"
                     @mouseover="isHovered = true"
                     @mouseleave="isHovered = false"
@@ -116,11 +149,11 @@
 </template>
 
 <script setup lang="ts">
-import {axios} from "@/shared/config/axios"
 import type {Item} from "@/shared/ui/Select/select.type.ts";
 
 const DEFAULT_WEEK_CELL_HEIGHT = 60
-const DEFAULT_MONTH_CELL_HEIGHT = 90
+const DEFAULT_MONTH_CELL_HEIGHT = 140
+const MAX_MONTH_EVENT_COUNT = 3
 const CURRENT_YEAR: number = getCurrentYear()
 const CURRENT_MONTH: Date = getCurrentMonthDate()
 const CURRENT_DAYS = ref<Date[]>(getCurrentDates())
@@ -202,7 +235,7 @@ const items = ref<Item[]>([
   },
 ])
 
-const MOCK_TIMES = [
+const MOCK_EVENTS = [
   {
     id: 1,
     name: 'Weekly team meeting',
@@ -212,12 +245,52 @@ const MOCK_TIMES = [
     background: '#fa934b',
   },
   {
-    id: 2,
+    id: 1,
+    name: 'Weekly team meeting',
+    date: new Date('2025.02.20'),
+    timeStart: '09:25',
+    timeEnd: '12:10',
+    background: '#3bbd00',
+  },
+  {
+    id: 3,
     name: 'Weekly team meeting 2',
     date: new Date('2025.02.21'),
     timeStart: '07:15',
     timeEnd: '011:30',
     background: '#d11c91',
+  },
+  {
+    id: 4,
+    name: 'Weekly team meeting',
+    date: new Date('2025.02.11'),
+    timeStart: '03:00',
+    timeEnd: '04:30',
+    background: '#fa934b',
+  },
+  {
+    id: 5,
+    name: 'Weekly team meeting',
+    date: new Date('2025.02.11'),
+    timeStart: '09:25',
+    timeEnd: '12:10',
+    background: '#3bbd00',
+  },
+  {
+    id: 6,
+    name: 'Weekly team meeting 2',
+    date: new Date('2025.02.11'),
+    timeStart: '07:15',
+    timeEnd: '11:30',
+    background: '#d11c91',
+  },
+  {
+    id: 6,
+    name: 'Weekly team meeting 2',
+    date: new Date('2025.02.11'),
+    timeStart: '14:15',
+    timeEnd: '17:30',
+    background: '#d1ad1c',
   }
 ]
 
@@ -256,14 +329,14 @@ function timeUnitHandler(item: Item) {
   }
 }
 
-function isEvent(date: Date, hour: string) { // todo: optimize
-  const hourStart = hour.split(':')[0]
+function isEvent(date: Date, hour?: string) { // todo: optimize
+  const hourStart = hour?.split(':')?.[0]
 
-  return MOCK_TIMES.find(item => {
+  return MOCK_EVENTS.find(item => {
     const isYear = item.date.getFullYear() === date.getFullYear()
     const isMonth = item.date.getMonth() === date.getMonth()
     const isDay = item.date.getDate() === date.getDate()
-    const isTime = item.timeStart.split(':')[0] === hourStart
+    const isTime = hour ? item.timeStart.split(':')[0] === hourStart : true
 
     return isYear && isMonth && isDay && isTime
   })
