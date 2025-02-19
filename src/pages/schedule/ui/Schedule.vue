@@ -39,7 +39,7 @@
         >
           <template v-if="isEvent(date)">
             <button
-              v-for="event in MOCK_EVENTS.filter(item => item.date.getTime() === date.getTime()).slice(0, MAX_MONTH_EVENT_COUNT)"
+              v-for="event in eventMap[date.getTime()].slice(0, MAX_MONTH_EVENT_COUNT)"
               class="bg-white z-10 flex flex-col size-full rounded-md h-auto"
               @mouseover="isHovered = true"
               @mouseleave="isHovered = false"
@@ -61,10 +61,10 @@
             <div class="mt-auto flex gap-1 py-1 px-2">
               <button
                 class="underline"
-                v-if="MOCK_EVENTS.filter(item => item.date.getTime() === date.getTime()).length > MAX_MONTH_EVENT_COUNT"
+                v-if="eventMap[date.getTime()].length > MAX_MONTH_EVENT_COUNT"
                 @click="selectDay(date)"
               >
-                Show more
+                Show more ({{ eventMap[date.getTime()].length - MAX_MONTH_EVENT_COUNT }})
               </button>
               <button @click="selectDay(date)" class="ml-auto">{{ date.getDate() }}</button>
             </div>
@@ -336,6 +336,15 @@ const MOCK_EVENTS: Event[] = [
     background: '#3bbd30',
   },
 ]
+
+const eventMap = computed<Record<number, Event[]>>(() => {
+  return MOCK_EVENTS.reduce<Record<number, Event[]>>((acc, event: Event) => {
+    const timestamp = event.date.getTime();
+    if (!acc[timestamp]) acc[timestamp] = [];
+    acc[timestamp].push(event);
+    return acc;
+  }, {} as Record<number, Event[]>);
+});
 
 const currentTimeUnit = computed((): Item => items.value.find(item => item.selected) as Item)
 
