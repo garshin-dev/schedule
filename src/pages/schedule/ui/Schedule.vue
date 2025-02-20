@@ -14,73 +14,16 @@
       <Button variant="outline">Some outline</Button>
     </div>
 
-    currentTimeUnit: {{ currentTimeUnit.name }}
-
-    <div class="flex flex-col w-full" v-if="currentTimeUnit.value === TimeUnits.Year">
-      YEAR
-    </div>
-    <div class="flex flex-col w-full" v-else-if="currentTimeUnit.value === TimeUnits.Month">
-      <div class="grid grid-cols-7 w-full" :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }">
-        <div class="text-center border-b border-b-black/10 pb-2" v-for="dayOfWeek in WEEKS" :key="dayOfWeek">
-          <div
-            class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md anim text-black"
-          >
-            <span>
-              {{ dayOfWeek }}
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="grid grid-cols-7 w-full border-l border-l-black/10" :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }">
-        <div
-          v-for="date in CURRENT_DAYS" :key="date.toString()"
-          class="border-r border-b border-b-black/10 border-r-black/10 flex flex-col gap-1"
-          :style="{ height: DEFAULT_MONTH_CELL_HEIGHT + 'px' }"
-        >
-          <template v-if="isEvent(date)">
-            <button
-              v-for="event in eventMap[date.getTime()].slice(0, MAX_MONTH_EVENT_COUNT)"
-              class="bg-white z-10 flex flex-col size-full rounded-md h-auto"
-              @mouseover="isHovered = true"
-              @mouseleave="isHovered = false"
-            >
-              <span
-                class="flex flex-col items-start text-left size-full text-black px-1 py-0.5 rounded-md anim border-2 border-transparent"
-                :style="{
-                  backgroundColor: hexToRgba(event.background, 0.3),
-                  borderColor: isHovered ? event.background : ''
-                }"
-              >
-                <span class="flex gap-1 w-full">
-                  <span class="text-black/60">{{ event.timeStart }}</span>
-                  <span class="truncate">{{ event.name }}</span>
-                </span>
-              </span>
-            </button>
-
-            <div class="mt-auto flex gap-1 py-1 px-2">
-              <button
-                class="underline"
-                v-if="eventMap[date.getTime()].length > MAX_MONTH_EVENT_COUNT"
-                @click="selectDay(date)"
-              >
-                Show more ({{ eventMap[date.getTime()].length - MAX_MONTH_EVENT_COUNT }})
-              </button>
-              <button @click="selectDay(date)" class="ml-auto">{{ date.getDate() }}</button>
-            </div>
-          </template>
-          <button @click="selectDay(date)" class="text-right mt-auto py-1 px-2 ml-auto" v-else>{{ date.getDate() }}</button>
-        </div>
-      </div>
-    </div>
+    <YearView v-if="currentTimeUnit.value === TimeUnits.Year" />
+    <MonthView v-if="currentTimeUnit.value === TimeUnits.Month" :events="MOCK_EVENTS" @select-day="selectDay" :selected-days="selectedDays" />
     <div class="flex flex-col w-full" v-else>
-      <div class="grid grid-cols-7 w-full pl-14" :style="{ gridTemplateColumns: `repeat(${CURRENT_DAYS.length}, minmax(0, 1fr))` }">
-        <div class="text-center border-b border-b-black/10 pb-2" v-for="date in CURRENT_DAYS" :key="date.toString()">
+      <div class="grid grid-cols-7 w-full pl-14" :style="{ gridTemplateColumns: `repeat(${selectedDays.length}, minmax(0, 1fr))` }">
+        <div class="text-center border-b border-b-black/10 pb-2" v-for="date in selectedDays" :key="date.toString()">
           <button
             class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md anim hover:bg-black/10"
             :class="{
               [isCurrentDay(date) ? 'text-black' : 'text-black/30 hover:text-black/50']: true,
-              'pointer-events-none': CURRENT_DAYS.length === 1
+              'pointer-events-none': selectedDays.length === 1
             }"
             @click="selectDay(date)"
           >
@@ -105,24 +48,27 @@
               {{ hour }}
             </span>
           </span>
-          </div>
-          <div class="w-full h-full">
-            <div class="grid grid-cols-7 w-full" :style="{ gridTemplateColumns: `repeat(${CURRENT_DAYS.length}, minmax(0, 1fr))` }">
-              <div v-for="date in CURRENT_DAYS" :key="date.toString()" class="border-r border-r-black/10">
-                <div
-                  class="flex uppercase text-center border-b border-b-black/10 relative"
-                  :style="{ height: DEFAULT_WEEK_CELL_HEIGHT + 'px' }"
-                  v-for="hour in HOURS"
-                  :key="hour"
-                >
+        </div>
+        <div class="w-full h-full">
+          <div class="grid grid-cols-7 w-full" :style="{ gridTemplateColumns: `repeat(${selectedDays.length}, minmax(0, 1fr))` }">
+            <div v-for="date in selectedDays" :key="date.toString()" class="border-r border-r-black/10">
+              <div
+                class="flex uppercase text-center border-b border-b-black/10 relative"
+                :style="{ height: DEFAULT_WEEK_CELL_HEIGHT + 'px' }"
+                v-for="hour in HOURS"
+                :key="hour"
+              >
+                <template v-if="isEvent(date, hour)?.length">
                   <button
-                    v-if="isEvent(date, hour)"
-                    class="bg-white z-10 flex flex-col relative left-0 top-0 size-full rounded-xl"
+                    v-for="event in isEvent(date, hour)"
+                    :key="event.id"
+                    class="bg-white z-10 flex flex-col absolute left-0 top-0 size-full rounded-xl hover:z-20"
                     :style="{
-                      height: `calc(${getEventHeight(isEvent(date, hour))}px - 1px)`,
-                      marginTop: `${getEventOffset(isEvent(date, hour).timeStart)}px`,
-                      marginLeft: `${isOverlapping(isEvent(date, hour))}px`,
-                      outlineColor: isEvent(date, hour).background
+                      height: `calc(${getEventHeight(event)}px - 1px)`,
+                      marginTop: `${getEventOffset(event.timeStart)}px`,
+                      marginLeft: `${isOverlapping(event)}px`,
+                      width: `calc(100% - ${isOverlapping(event)}px)`,
+                      outlineColor: event.background
                     }"
                     @mouseover="isHovered = true"
                     @mouseleave="isHovered = false"
@@ -130,20 +76,21 @@
                     <span
                       class="flex flex-col items-start text-left size-full text-black px-3 py-2 rounded-xl anim border-2 border-transparent"
                       :style="{
-                        backgroundColor: hexToRgba(isEvent(date, hour).background, 0.3),
-                        borderColor: isHovered ? isEvent(date, hour).background : ''
+                        backgroundColor: hexToRgba(event.background, 0.3),
+                        borderColor: isHovered ? event.background : ''
                       }"
                     >
-                      <span>{{ isEvent(date, hour).name }}</span>
+                      <span>{{ event.name }}</span>
                       <span class="text-black/60">
-                        {{ isEvent(date, hour).timeStart }} - {{ isEvent(date, hour).timeEnd }}
+                        {{ event.timeStart }} - {{ event.timeEnd }}
                       </span>
                     </span>
                   </button>
-                </div>
+                </template>
               </div>
             </div>
           </div>
+        </div>
       </div>
     </div>
   </div>
@@ -151,55 +98,24 @@
 
 <script setup lang="ts">
 import type {Item} from "@/shared/ui/Select/select.type.ts";
+import {YearView} from "@/widgets/schedule/views/year";
+import {MonthView} from "@/widgets/schedule/views/month";
+import type { Event } from '@/entities/schedule/event'
+import {WEEKS} from "@/shared/constants/date";
+import {hexToRgba} from "@/shared/lib/color";
 
 const OVERLAPPING_OFFSET = 25
 const DEFAULT_WEEK_CELL_HEIGHT = 60
-const DEFAULT_MONTH_CELL_HEIGHT = 140
-const MAX_MONTH_EVENT_COUNT = 3
 const CURRENT_YEAR: number = getCurrentYear()
 const CURRENT_MONTH: Date = getCurrentMonthDate()
-const CURRENT_DAYS = ref<Date[]>(getCurrentDates())
+const selectedDays = ref<Date[]>(getCurrentDates())
+
 const HOURS: string[] = [
   "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
   "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"
 ];
 
 const isHovered = ref<boolean>(false)
-
-function hexToRgba(hex: string, opacity: number) {
-  hex = hex.replace('#', '');
-
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-}
-
-const MONTHS: string[] = [
-  "january",
-  "february",
-  "march",
-  "april",
-  "may",
-  "june",
-  "july",
-  "august",
-  "september",
-  "october",
-  "november",
-  "december"
-];
-
-const WEEKS: string[] = [
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-  "sunday",
-];
 
 enum TimeUnits {
   Day = 'day',
@@ -215,15 +131,15 @@ const items = ref<Item[]>([
     value: TimeUnits.Day,
     selected: false
   },
-  ...(CURRENT_DAYS.value.length === 7 ? [] : [{
-    name: `${CURRENT_DAYS.value.length} days`,
+  ...(selectedDays.value.length === 7 ? [] : [{
+    name: `${selectedDays.value.length} days`,
     value: TimeUnits.Days,
     selected: true
   }]),
   {
     name: 'Week',
     value: TimeUnits.Week,
-    selected: CURRENT_DAYS.value.length === 7
+    selected: selectedDays.value.length === 7
   },
   {
     name: 'Month',
@@ -237,15 +153,6 @@ const items = ref<Item[]>([
   },
 ])
 
-interface Event {
-  id: number
-  name: string
-  date: Date
-  timeStart: string
-  timeEnd: string
-  background: string
-}
-
 const MOCK_EVENTS: Event[] = [
   {
     id: 1,
@@ -256,7 +163,15 @@ const MOCK_EVENTS: Event[] = [
     background: '#fa934b',
   },
   {
-    id: 1,
+    id: 111,
+    name: 'Weekly team me!!!!!',
+    date: new Date('2025.02.20'),
+    timeStart: '03:30',
+    timeEnd: '05:25',
+    background: '#fac34b',
+  },
+  {
+    id: 2,
     name: 'Weekly team meeting',
     date: new Date('2025.02.20'),
     timeStart: '09:25',
@@ -274,7 +189,7 @@ const MOCK_EVENTS: Event[] = [
   {
     id: 4,
     name: 'Weekly team meeting',
-    date: new Date('2025.02.11'),
+    date: new Date('2025.02.22'),
     timeStart: '03:00',
     timeEnd: '04:30',
     background: '#fa934b',
@@ -282,7 +197,7 @@ const MOCK_EVENTS: Event[] = [
   {
     id: 5,
     name: 'Weekly team meeting',
-    date: new Date('2025.02.11'),
+    date: new Date('2025.02.22'),
     timeStart: '09:25',
     timeEnd: '12:10',
     background: '#3bbd00',
@@ -290,7 +205,7 @@ const MOCK_EVENTS: Event[] = [
   {
     id: 6,
     name: 'Weekly team meeting 2',
-    date: new Date('2025.02.11'),
+    date: new Date('2025.02.22'),
     timeStart: '07:15',
     timeEnd: '11:30',
     background: '#d11c91',
@@ -298,7 +213,7 @@ const MOCK_EVENTS: Event[] = [
   {
     id: 6,
     name: 'Weekly team meeting 2',
-    date: new Date('2025.02.11'),
+    date: new Date('2025.02.22'),
     timeStart: '14:15',
     timeEnd: '17:30',
     background: '#d1ad1c',
@@ -306,7 +221,7 @@ const MOCK_EVENTS: Event[] = [
   {
     id: 7,
     name: 'Weekly team meeting 2',
-    date: new Date('2025.02.11'),
+    date: new Date('2025.02.22'),
     timeStart: '12:15',
     timeEnd: '19:45',
     background: '#d1521c',
@@ -314,7 +229,7 @@ const MOCK_EVENTS: Event[] = [
   {
     id: 8,
     name: 'Weekly team meeting 23',
-    date: new Date('2025.02.11'),
+    date: new Date('2025.02.22'),
     timeStart: '18:15',
     timeEnd: '19:25',
     background: '#1cd1a1',
@@ -322,7 +237,7 @@ const MOCK_EVENTS: Event[] = [
   {
     id: 9,
     name: 'Weekly team meeting 7',
-    date: new Date('2025.02.11'),
+    date: new Date('2025.02.22'),
     timeStart: '16:00',
     timeEnd: '17:00',
     background: '#ff4949',
@@ -330,36 +245,27 @@ const MOCK_EVENTS: Event[] = [
   {
     id: 10,
     name: 'Weekly team meeting',
-    date: new Date('2025.02.11'),
+    date: new Date('2025.02.22'),
     timeStart: '17:15',
     timeEnd: '18:10',
     background: '#3bbd30',
   },
 ]
 
-const eventMap = computed<Record<number, Event[]>>(() => {
-  return MOCK_EVENTS.reduce<Record<number, Event[]>>((acc, event: Event) => {
-    const timestamp = event.date.getTime();
-    if (!acc[timestamp]) acc[timestamp] = [];
-    acc[timestamp].push(event);
-    return acc;
-  }, {} as Record<number, Event[]>);
-});
-
 const currentTimeUnit = computed((): Item => items.value.find(item => item.selected) as Item)
 
 function timeUnitHandler(item: Item) {
   switch (item.value) {
     case TimeUnits.Day:
-      CURRENT_DAYS.value = getCurrentDates(1)
+      selectedDays.value = getCurrentDates(1)
       break;
     case TimeUnits.Days:
-      CURRENT_DAYS.value = getCurrentDates()
+      selectedDays.value = getCurrentDates()
       break;
     case TimeUnits.Week:
       const today = new Date();
       const firstDayOfWeek = getFirstDayOfWeek(today)
-      CURRENT_DAYS.value = getCurrentDates(7, firstDayOfWeek)
+      selectedDays.value = getCurrentDates(7, firstDayOfWeek)
       break;
     case TimeUnits.Month:
       const firstDayOfMonth = getFirstDayOfMonth(CURRENT_YEAR, CURRENT_MONTH)
@@ -376,15 +282,15 @@ function timeUnitHandler(item: Item) {
 
       const totalCount = daysInMonth + daysBefore + daysAfter
 
-      CURRENT_DAYS.value = getCurrentDates(totalCount, firstDayOfWeekOfMonth)
+      selectedDays.value = getCurrentDates(totalCount, firstDayOfWeekOfMonth)
       break;
   }
 }
 
-function isEvent(date: Date, hour?: string) { // todo: optimize
+function isEvent(date: Date, hour?: string): Event[]|undefined { // todo: optimize
   const hourStart = hour?.split(':')?.[0]
 
-  return MOCK_EVENTS.find(item => {
+  return MOCK_EVENTS.filter(item => {
     const isYear = item.date.getFullYear() === date.getFullYear()
     const isMonth = item.date.getMonth() === date.getMonth()
     const isDay = item.date.getDate() === date.getDate()
@@ -393,6 +299,19 @@ function isEvent(date: Date, hour?: string) { // todo: optimize
     return isYear && isMonth && isDay && isTime
   })
 }
+
+// const eventMap = computed<Record<number, Record<string, Event[]>>>(() => {
+//   return MOCK_EVENTS.reduce<Record<number, Record<string, Event[]>>>((acc, event: Event) => {
+//     const timestamp = event.date.getTime();
+//     const timeStart = event.timeStart.split(':')[0]
+//
+//     if (!acc[timestamp]) acc[timestamp] = {};
+//     if (!acc[timestamp][timeStart]) acc[timestamp][timeStart] = [];
+//     acc[timestamp][timeStart].push(event);
+//
+//     return acc;
+//   }, {} as Record<number, Record<string, Event[]>>);
+// });
 
 function isOverlapping(event: Event) {
   const count = MOCK_EVENTS.filter(item => {
@@ -421,7 +340,7 @@ function getEventHeight({timeStart, timeEnd}: {timeStart: string, timeEnd: strin
 }
 
 function getEventOffset(timeStart: string) {
-  const [_, minutes] = timeStart.split(':')
+  const [, minutes] = timeStart.split(':')
   const value = parseInt(minutes) / 60
 
   return value * DEFAULT_WEEK_CELL_HEIGHT
@@ -496,6 +415,6 @@ function selectDay(date: Date) {
     item.selected = item.value === TimeUnits.Day
   })
 
-  CURRENT_DAYS.value = getCurrentDates(1, date)
+  selectedDays.value = getCurrentDates(1, date)
 }
 </script>
