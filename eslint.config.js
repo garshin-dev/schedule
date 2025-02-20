@@ -8,7 +8,7 @@ import eslintConfigPrettier from 'eslint-config-prettier'
 export default [
   {
     name: 'app/files-to-lint',
-    files: ['**/*.{ts,mts,tsx,vue}'],
+    files: ['**/*.{ts,mts,vue}'],
   },
   {
     name: 'app/files-to-ignore',
