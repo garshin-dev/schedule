@@ -1,1 +1,1 @@
-export {default as Schedule} from './ui/Schedule.vue'
+export { default as Schedule } from './ui/Schedule.vue'
