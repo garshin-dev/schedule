@@ -18,7 +18,7 @@
 enum Variants {
   Primary = 'primary',
   Secondary = 'secondary',
-  outline = 'outline'
+  outline = 'outline',
 }
 
 interface Props {
@@ -29,8 +29,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: Variants.Primary
+  variant: Variants.Primary,
 })
 
-const component = computed(() => props.to ? 'RouterLink' : 'button')
+const component = computed(() => (props.to ? 'RouterLink' : 'button'))
 </script>

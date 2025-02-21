@@ -1,0 +1,1 @@
+export const DEFAULT_DAY_CELL_HEIGHT = 60

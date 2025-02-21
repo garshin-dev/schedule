@@ -9,7 +9,7 @@
         readonly
         @keydown.enter="toggleDropdown"
         @keydown.esc="closeDropdown"
-      >
+      />
     </div>
     <Transition
       enter-active-class="transition-opacity duration-300"
@@ -17,16 +17,13 @@
       leave-active-class="transition-opacity duration-300"
       leave-to-class="opacity-0"
     >
-      <div class="flex flex-col absolute bg-white border border-black z-10 top-full mt-0.5 w-full" v-show="isShow">
+      <div
+        class="flex flex-col absolute bg-white border border-black z-10 top-full mt-0.5 w-full"
+        v-show="isShow"
+      >
         <ul class="flex flex-col">
-          <li
-            v-for="item in modelItems"
-            :key="item.name"
-          >
-            <button
-              class="w-full flex"
-              @click="selectHandler(item)"
-            >
+          <li v-for="item in modelItems" :key="item.name">
+            <button class="w-full flex" @click="selectHandler(item)">
               {{ item.name }}
             </button>
           </li>
@@ -56,7 +53,7 @@ const modelItems = defineModel<Item[]>({ required: true })
 const selectRef = ref<HTMLDivElement>()
 
 const isShow = ref<boolean>(false)
-const selectedItem = computed(() => modelItems.value.find(item => item.selected))
+const selectedItem = computed(() => modelItems.value.find((item) => item.selected))
 
 const toggleDropdown = () => {
   isShow.value = !isShow.value
@@ -69,7 +66,7 @@ const closeDropdown = () => {
 const selectHandler = (item: Item) => {
   closeDropdown()
 
-  modelItems.value.forEach(modelItem => {
+  modelItems.value.forEach((modelItem) => {
     modelItem.selected = modelItem.value === item.value
   })
 
