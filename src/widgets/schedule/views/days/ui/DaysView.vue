@@ -94,10 +94,10 @@ function isEvent(date: Date, hour?: string): IEvent[] | undefined {
   const hourStart = hour?.split(':')?.[0]
 
   return props.events.filter((item) => {
-    const isYear = item.date.getFullYear() === date.getFullYear()
-    const isMonth = item.date.getMonth() === date.getMonth()
-    const isDay = item.date.getDate() === date.getDate()
-    const isTime = hour ? item.timeStart.split(':')[0] === hourStart : true
+    const isYear = item.startDate.getFullYear() === date.getFullYear()
+    const isMonth = item.startDate.getMonth() === date.getMonth()
+    const isDay = item.startDate.getDate() === date.getDate()
+    const isTime = hour ? item.startTime.split(':')[0] === hourStart : true
 
     return isYear && isMonth && isDay && isTime
   })
@@ -105,12 +105,12 @@ function isEvent(date: Date, hour?: string): IEvent[] | undefined {
 
 // const eventMap = computed<Record<number, Record<string, IEvent[]>>>(() => {
 //   return props.events.reduce<Record<number, Record<string, IEvent[]>>>((acc, event: Event) => {
-//     const timestamp = event.date.getTime();
-//     const timeStart = event.timeStart.split(':')[0]
+//     const timestamp = event.startDate.getTime();
+//     const startTime = event.startTime.split(':')[0]
 //
 //     if (!acc[timestamp]) acc[timestamp] = {};
-//     if (!acc[timestamp][timeStart]) acc[timestamp][timeStart] = [];
-//     acc[timestamp][timeStart].push(event);
+//     if (!acc[timestamp][startTime]) acc[timestamp][startTime] = [];
+//     acc[timestamp][startTime].push(event);
 //
 //     return acc;
 //   }, {} as Record<number, Record<string, IEvent[]>>);
@@ -118,12 +118,12 @@ function isEvent(date: Date, hour?: string): IEvent[] | undefined {
 
 function overlappingOffset(event: IEvent) {
   const count = props.events.filter((item) => {
-    const isYear = item.date.getFullYear() === event.date.getFullYear()
-    const isMonth = item.date.getMonth() === event.date.getMonth()
-    const isDay = item.date.getDate() === event.date.getDate()
+    const isYear = item.startDate.getFullYear() === event.startDate.getFullYear()
+    const isMonth = item.startDate.getMonth() === event.startDate.getMonth()
+    const isDay = item.startDate.getDate() === event.startDate.getDate()
 
     const condition =
-      event.timeStart >= item.timeStart && item.timeEnd > event.timeStart && event.id !== item.id
+      event.startTime >= item.startTime && item.endTime > event.startTime && event.id !== item.id
 
     return isYear && isMonth && isDay && condition
   })?.length

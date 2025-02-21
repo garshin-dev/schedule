@@ -9,7 +9,7 @@
     }"
   >
     <span>{{ event.name }}</span>
-    <span class="text-black/60">{{ event.timeStart }} - {{ event.timeEnd }}</span>
+    <span class="text-black/60">{{ event.startTime }} - {{ event.endTime }}</span>
   </span>
 </template>
 

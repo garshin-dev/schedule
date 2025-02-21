@@ -58,7 +58,7 @@
                   }"
                 >
                   <span class="flex gap-1 w-full">
-                    <span class="text-black/60">{{ event.timeStart }}</span>
+                    <span class="text-black/60">{{ event.startTime }}</span>
                     <span class="truncate">{{ event.name }}</span>
                   </span>
                 </span>
@@ -118,7 +118,7 @@ defineEmits<Emits>()
 const eventMap = computed<Record<number, IEvent[]>>(() => {
   return props.events.reduce<Record<number, IEvent[]>>(
     (acc, event: IEvent) => {
-      const timestamp = event.date.getTime()
+      const timestamp = event.startDate.getTime()
       if (!acc[timestamp]) acc[timestamp] = []
       acc[timestamp].push(event)
       return acc

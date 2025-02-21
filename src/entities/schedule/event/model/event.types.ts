@@ -1,8 +1,9 @@
 export interface IEvent {
   id: number
   name: string
-  date: Date
-  timeStart: string
-  timeEnd: string
+  startDate: Date
+  endDate: Date
+  startTime: string
+  endTime: string
   background: string
 }
