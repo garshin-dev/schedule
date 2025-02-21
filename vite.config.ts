@@ -12,24 +12,24 @@ export default defineConfig({
     vueDevTools(),
     AutoImport({
       imports: ['vue', 'vue-router'],
-      dts: true
+      dts: true,
     }),
     Components({
       dirs: ['./src/shared/ui'],
-      dts: true
-    })
+      dts: true,
+    }),
   ],
   publicDir: './src/app/public',
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   server: {
     host: true,
     port: Number(process.env.FRONTEND_PORT) || 5173,
     watch: {
-      usePolling: true
-    }
-  }
+      usePolling: true,
+    },
+  },
 })

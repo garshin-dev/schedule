@@ -9,7 +9,7 @@ services:
     volumes:
       - ./api/postgres-data:/data/postgres
     ports:
-      - "${DB_PORT}:${DB_PORT}"
+      - '${DB_PORT}:${DB_PORT}'
   backend:
     container_name: ${BACKEND_CONTAINER_NAME}
     build:
@@ -24,7 +24,7 @@ services:
     volumes:
       - ./api:/app
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - '${BACKEND_PORT}:${BACKEND_PORT}'
     command: sh -c "air"
     depends_on:
       - postgres
@@ -39,5 +39,5 @@ services:
       - ./:/app
       - /app/node_modules
     ports:
-      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+      - '${FRONTEND_PORT}:${FRONTEND_PORT}'
     command: sh -c "pnpm run dev"

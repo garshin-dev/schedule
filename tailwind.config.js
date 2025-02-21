@@ -5,12 +5,11 @@ export default {
       white: '#FFFFFF',
       black: '#131E3A',
       tur: '#28cdbe',
-      transparent: 'transparent'
+      transparent: 'transparent',
     },
   },
   future: {
     hoverOnlyWhenSupported: true,
   },
-  content: ["./src/**/*.{vue,ts}"],
+  content: ['./src/**/*.{vue,ts}'],
 }
-

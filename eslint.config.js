@@ -18,7 +18,7 @@ export default [
   {
     rules: {
       'vue/multi-word-component-names': 'off',
-    }
+    },
   },
   {
     plugins: {
@@ -31,5 +31,5 @@ export default [
     files: ['src/**/*.test.ts'],
   },
   skipFormatting,
-  eslintConfigPrettier
+  eslintConfigPrettier,
 ]

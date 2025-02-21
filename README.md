@@ -3,9 +3,11 @@
 **Schedule** - is a project to create a calendar event with different features.
 
 ## Status
+
 **In development**
 
 ## Architecture
+
 The project uses [FSD](https://feature-sliced.design/) architectural methodology.
 
 ## Project Setup
