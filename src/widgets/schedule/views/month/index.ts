@@ -1,1 +1,1 @@
-export {default as MonthView} from './ui/MonthView.vue'
+export { default as MonthView } from './ui/MonthView.vue'

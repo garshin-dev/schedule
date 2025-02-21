@@ -1,1 +1,1 @@
-export {default as YearView} from './ui/YearView.vue'
+export { default as YearView } from './ui/YearView.vue'

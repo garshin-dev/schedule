@@ -3,7 +3,7 @@
     <ul class="flex gap-4">
       <li v-for="link in links" :key="link.name">
         <RouterLink v-slot="{ isActive }" :to="link.path">
-          <span :class="[ isActive ? 'text-black' : 'text-black/50']">
+          <span :class="[isActive ? 'text-black' : 'text-black/50']">
             {{ link.name }}
           </span>
         </RouterLink>
@@ -16,11 +16,11 @@
 const links = [
   {
     name: 'Main',
-    path: '/'
+    path: '/',
   },
   {
     name: 'Schedule',
-    path: '/schedule'
-  }
+    path: '/schedule',
+  },
 ]
 </script>
