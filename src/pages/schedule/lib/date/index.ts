@@ -4,9 +4,10 @@ export function getDaysInMonth(year: number, month: Date): number {
 
 export function getDatesInRange(limit?: number, date?: Date) {
   const firstDay = date || new Date()
-    firstDay.setHours(0, 0, 0, 0)
-  const day = firstDay.getDay()
-  const count = limit || (day > 1 ? 7 - day + 1 : 7)
+  firstDay.setHours(0, 0, 0, 0)
+
+  const day = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1
+  const count = limit || (day > 1 ? 7 - day : 7)
   const weekDates = []
 
   for (let i = 0; i < count; i++) {
