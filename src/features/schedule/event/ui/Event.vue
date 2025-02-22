@@ -5,7 +5,7 @@
     :class="[isHovered ? 'z-20' : 'z-10']"
     :style="{
       height: `calc(${getEventHeight(event, currentDate)}px - 1px)`,
-      marginTop: `${getEventOffset(event.startTime)}px`,
+      marginTop: `${getEventOffset(event, currentDate)}px`,
       marginLeft: `${overlappingOffset}px`,
       width: `calc(100% - ${overlappingOffset}px)`,
     }"

@@ -204,7 +204,7 @@ const MOCK_EVENTS: IEvent[] = [
     endDate: new Date('2025.02.23'),
     startTime: '22:15',
     endTime: '03:40',
-    background: '#0ce1c8',
+    background: '#2b3e3c',
   },
 ]
 

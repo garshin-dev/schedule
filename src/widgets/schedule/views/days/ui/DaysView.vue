@@ -90,12 +90,18 @@ defineEmits<Emits>()
 
 const OVERLAPPING_OFFSET = 25
 
-function isEvent(date: Date, hour?: string): IEvent[] | undefined {
-  const hourStart = hour?.split(':')?.[0]
+function isEvent(date: Date, hour: string): IEvent[] | undefined {
+  const hourStart = hour.split(':')[0]
 
   return props.events.filter((event) => {
-    const isTimeMatch = hour ? event.startTime.split(':')[0] === hourStart : true
+    const isTimeMatch = hourStart === event.startTime.split(':')[0]
     const isDateInRange = date.getTime() >= event.startDate.getTime() && date.getTime() <= event.endDate.getTime()
+
+    if (event.startDate.getTime() !== event.endDate.getTime()) {
+      if (event.startDate.getTime() !== date.getTime()) {
+        return isDateInRange && hourStart === '00'
+      }
+    }
 
     return isDateInRange && isTimeMatch
   })
