@@ -1,7 +1,7 @@
 <template>
   <div class="px-3 py-4 flex flex-col items-start">
     <div class="flex gap-8 items-center mb-4">
-      <Select placeholder="Choose" v-model="timeUnitOptions" @select="timeUnitHandler" />
+      <Select v-model="timeUnitOptions" placeholder="Choose" @select="timeUnitHandler" />
 
       <div class="flex gap-4">
         <div class="flex gap-2">
@@ -9,7 +9,7 @@
           <span>{{ CURRENT_YEAR }}</span>
         </div>
 
-        <div class="flex gap-2" v-if="currentTimeUnit.value !== TimeUnits.Year">
+        <div v-if="currentTimeUnit.value !== TimeUnits.Year" class="flex gap-2">
           <span>Month:</span>
           <span class="uppercase">{{ MONTHS[CURRENT_MONTH.getMonth()] }}</span>
         </div>
@@ -20,10 +20,10 @@
     <MonthView
       v-else-if="currentTimeUnit.value === TimeUnits.Month"
       :events="MOCK_EVENTS"
-      @select-day="selectDay"
       :selected-days="selectedDays"
+      @select-day="selectDay"
     />
-    <DaysView v-else :events="MOCK_EVENTS" @select-day="selectDay" :selected-days="selectedDays" />
+    <DaysView v-else :events="MOCK_EVENTS" :selected-days="selectedDays" @select-day="selectDay" />
   </div>
 </template>
 
@@ -196,6 +196,15 @@ const MOCK_EVENTS: IEvent[] = [
     startTime: '17:15',
     endTime: '18:10',
     background: '#3bbd30',
+  },
+  {
+    id: 10,
+    name: 'Weekly team meeting',
+    startDate: new Date('2025.02.22'),
+    endDate: new Date('2025.02.23'),
+    startTime: '22:15',
+    endTime: '03:40',
+    background: '#0ce1c8',
   },
 ]
 

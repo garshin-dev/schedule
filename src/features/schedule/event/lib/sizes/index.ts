@@ -1,4 +1,5 @@
 import { DEFAULT_DAY_CELL_HEIGHT } from '@/shared/constants/sizes'
+import type { IEvent } from '@/entities/schedule/event'
 
 export function getEventOffset(startTime: string) {
   const [, minutes] = startTime.split(':')
@@ -7,14 +8,13 @@ export function getEventOffset(startTime: string) {
   return value * DEFAULT_DAY_CELL_HEIGHT
 }
 
-export function getEventHeight({ startTime, endTime }: { startTime: string; endTime: string }) {
-  const [startTimeHours, startTimeMinutes] = startTime.split(':')
-  const [endTimeHours, endTimeMinutes] = endTime.split(':')
+export function getEventHeight(event: IEvent): number {
+  const [startHours, startMinutes] = event.startTime.split(':').map(Number)
+  const [endHours, endMinutes] = event.endTime.split(':').map(Number)
 
-  const hours = parseInt(endTimeHours) - parseInt(startTimeHours)
-  const minutes = parseInt(endTimeMinutes) - parseInt(startTimeMinutes)
+  if (event.startDate.getTime() !== event.endDate.getTime()) {
+    return (24 - startHours - startMinutes / 60) * DEFAULT_DAY_CELL_HEIGHT
+  }
 
-  const total = hours + minutes / 60
-
-  return total * DEFAULT_DAY_CELL_HEIGHT
+  return (endHours - startHours + (endMinutes - startMinutes) / 60) * DEFAULT_DAY_CELL_HEIGHT
 }

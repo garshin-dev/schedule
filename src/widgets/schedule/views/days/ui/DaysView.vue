@@ -5,9 +5,9 @@
       :style="{ gridTemplateColumns: `repeat(${selectedDays.length}, minmax(0, 1fr))` }"
     >
       <div
-        class="text-center border-b border-b-black/10 pb-2"
         v-for="date in selectedDays"
         :key="date.toString()"
+        class="text-center border-b border-b-black/10 pb-2"
       >
         <button
           class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md anim hover:bg-black/10"
@@ -50,16 +50,17 @@
             class="border-r border-r-black/10"
           >
             <div
-              class="flex uppercase text-center border-b border-b-black/10 relative"
-              :style="{ height: DEFAULT_DAY_CELL_HEIGHT + 'px' }"
               v-for="hour in HOURS"
               :key="hour"
+              class="flex uppercase text-center border-b border-b-black/10 relative"
+              :style="{ height: DEFAULT_DAY_CELL_HEIGHT + 'px' }"
             >
               <Event
-                :event="event"
-                :overlapping-offset="overlappingOffset(event)"
                 v-for="event in isEvent(date, hour)"
                 :key="event.id"
+                :current-date="date"
+                :event="event"
+                :overlapping-offset="overlappingOffset(event)"
               />
             </div>
           </div>

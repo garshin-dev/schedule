@@ -13,7 +13,9 @@
     @mouseleave="mouseLeaveHandler"
   >
     <EventContent :event="event" :is-hovered="isHovered" />
-    <span class="absolute top-0 right-0" v-if="overlappingOffset" title="Overlapping problem">(!)</span>
+    <span v-if="overlappingOffset" class="absolute top-0 right-0" title="Overlapping problem">
+      (!)
+    </span>
   </button>
 </template>
 

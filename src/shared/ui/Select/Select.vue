@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-1 relative" ref="selectRef">
+  <div ref="selectRef" class="flex flex-col gap-1 relative">
     <div class="flex" @click="toggleDropdown">
       <input
         type="text"
@@ -18,8 +18,8 @@
       leave-to-class="opacity-0"
     >
       <div
-        class="flex flex-col absolute bg-white border border-black z-10 top-full mt-0.5 w-full"
         v-show="isShow"
+        class="flex flex-col absolute bg-white border border-black z-10 top-full mt-0.5 w-full"
       >
         <ul class="flex flex-col">
           <li v-for="item in modelItems" :key="item.name">

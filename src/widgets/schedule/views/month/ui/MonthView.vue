@@ -5,9 +5,9 @@
       :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }"
     >
       <div
-        class="text-center border-b border-b-black/10 pb-2"
         v-for="dayOfWeek in WEEKS"
         :key="dayOfWeek"
+        class="text-center border-b border-b-black/10 pb-2"
       >
         <div
           class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md anim text-black"
@@ -66,21 +66,24 @@
 
               <div class="mt-auto flex gap-1">
                 <button
-                  class="underline hover:no-underline py-1 px-2"
                   v-if="eventMap[date.getTime()].length > MAX_MONTH_EVENT_COUNT"
+                  class="underline hover:no-underline py-1 px-2"
                   @click="$emit('select-day', date)"
                 >
                   Show more ({{ eventMap[date.getTime()].length - MAX_MONTH_EVENT_COUNT }})
                 </button>
-                <button @click="$emit('select-day', date)" class="ml-auto anim hover:bg-black/10 rounded-full size-8 font-bold">
+                <button
+                  class="ml-auto anim hover:bg-black/10 rounded-full size-8 font-bold"
+                  @click="$emit('select-day', date)"
+                >
                   {{ date.getDate() }}
                 </button>
               </div>
             </template>
             <button
-              @click="$emit('select-day', date)"
-              class="mt-auto ml-auto anim hover:bg-black/10 rounded-full size-8 font-bold"
               v-else
+              class="mt-auto ml-auto anim hover:bg-black/10 rounded-full size-8 font-bold"
+              @click="$emit('select-day', date)"
             >
               {{ date.getDate() }}
             </button>
@@ -92,10 +95,9 @@
 </template>
 
 <script setup lang="ts">
-import {WEEKS} from '@/shared/constants/date'
-import {hexToRgba} from '@/shared/lib/color'
-import type {IEvent} from '@/entities/schedule/event'
-import {DEFAULT_DAY_CELL_HEIGHT} from '@/shared/constants/sizes'
+import { WEEKS } from '@/shared/constants/date'
+import { hexToRgba } from '@/shared/lib/color'
+import type { IEvent } from '@/entities/schedule/event'
 
 const DEFAULT_MONTH_CELL_HEIGHT = 140
 const MAX_MONTH_EVENT_COUNT = 3
@@ -127,13 +129,13 @@ const eventMap = computed<Record<number, IEvent[]>>(() => {
   )
 })
 
-const numberOfWeeks = [...new Set(props.selectedDays.map(date => getWeekNumber(date)))]
+const numberOfWeeks = [...new Set(props.selectedDays.map((date) => getWeekNumber(date)))]
 
 function getWeekNumber(date: Date) {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-  const yearStart = new Date(d.getFullYear(), 0, 1);
-  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  d.setDate(d.getDate() + 4 - (d.getDay() || 7))
+  const yearStart = new Date(d.getFullYear(), 0, 1)
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7)
 }
 </script>
