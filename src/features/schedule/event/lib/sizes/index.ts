@@ -8,12 +8,16 @@ export function getEventOffset(startTime: string) {
   return value * DEFAULT_DAY_CELL_HEIGHT
 }
 
-export function getEventHeight(event: IEvent): number {
+export function getEventHeight(event: IEvent, currentDate: Date): number {
   const [startHours, startMinutes] = event.startTime.split(':').map(Number)
   const [endHours, endMinutes] = event.endTime.split(':').map(Number)
 
   if (event.startDate.getTime() !== event.endDate.getTime()) {
-    return (24 - startHours - startMinutes / 60) * DEFAULT_DAY_CELL_HEIGHT
+    if (event.endDate.getTime() === currentDate.getTime()) {
+      return (endHours + endMinutes / 60) * DEFAULT_DAY_CELL_HEIGHT
+    } else {
+      return (24 - startHours - startMinutes / 60) * DEFAULT_DAY_CELL_HEIGHT
+    }
   }
 
   return (endHours - startHours + (endMinutes - startMinutes) / 60) * DEFAULT_DAY_CELL_HEIGHT

@@ -4,7 +4,7 @@
     tabindex="-1"
     :class="[isHovered ? 'z-20' : 'z-10']"
     :style="{
-      height: `calc(${getEventHeight(event)}px - 1px)`,
+      height: `calc(${getEventHeight(event, currentDate)}px - 1px)`,
       marginTop: `${getEventOffset(event.startTime)}px`,
       marginLeft: `${overlappingOffset}px`,
       width: `calc(100% - ${overlappingOffset}px)`,
@@ -28,6 +28,7 @@ import { getEventHeight, getEventOffset } from '../lib/sizes'
 interface Props {
   event: IEvent
   overlappingOffset: number
+  currentDate: Date
 }
 
 defineProps<Props>()
