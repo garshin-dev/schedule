@@ -198,13 +198,31 @@ const MOCK_EVENTS: IEvent[] = [
     background: '#3bbd30',
   },
   {
-    id: 10,
+    id: 11,
     name: 'Weekly team meeting',
     startDate: new Date('2025.02.21'),
     endDate: new Date('2025.02.23'),
     startTime: '22:15',
     endTime: '03:40',
     background: '#2b3e3c',
+  },
+  {
+    id: 13,
+    name: 'Weekly team meeting 7',
+    startDate: new Date('2025.02.23'),
+    endDate: new Date('2025.02.23'),
+    startTime: '00:00',
+    endTime: '03:40',
+    background: '#641cd1',
+  },
+  {
+    id: 12,
+    name: 'Weekly team meeting 7',
+    startDate: new Date('2025.02.23'),
+    endDate: new Date('2025.02.23'),
+    startTime: '08:15',
+    endTime: '12:45',
+    background: '#d1521c',
   },
 ]
 

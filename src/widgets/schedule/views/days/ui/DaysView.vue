@@ -122,14 +122,20 @@ function isEvent(date: Date, hour: string): IEvent[] | undefined {
 
 function overlappingOffset(event: IEvent) {
   const count = props.events.filter((item) => {
-    const isYear = item.startDate.getFullYear() === event.startDate.getFullYear()
-    const isMonth = item.startDate.getMonth() === event.startDate.getMonth()
-    const isDay = item.startDate.getDate() === event.startDate.getDate()
-
+    const isDateInRange = event.startDate.getTime() >= item.startDate.getTime() && event.startDate.getTime() <= item.endDate.getTime()
+    const isNotEqual = event.id !== item.id
     const condition =
-      event.startTime >= item.startTime && item.endTime > event.startTime && event.id !== item.id
+      event.startTime >= item.startTime && item.endTime > event.startTime && isNotEqual
 
-    return isYear && isMonth && isDay && condition
+    if (item.startDate.getTime() !== item.endDate.getTime()) {
+      if (item.startDate.getTime() !== event.startDate.getTime() && item.endDate.getTime() !== event.endDate.getTime()) {
+        return true
+      }
+
+      return isDateInRange && item.endTime > event.startTime && isNotEqual
+    }
+
+    return isDateInRange && condition
   })?.length
 
   return count ? count * OVERLAPPING_OFFSET : 0
