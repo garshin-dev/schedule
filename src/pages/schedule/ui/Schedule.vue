@@ -200,7 +200,7 @@ const MOCK_EVENTS: IEvent[] = [
   {
     id: 10,
     name: 'Weekly team meeting',
-    startDate: new Date('2025.02.22'),
+    startDate: new Date('2025.02.21'),
     endDate: new Date('2025.02.23'),
     startTime: '22:15',
     endTime: '03:40',
