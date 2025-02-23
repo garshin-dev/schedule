@@ -56,11 +56,11 @@
               :style="{ height: DEFAULT_DAY_CELL_HEIGHT + 'px' }"
             >
               <Event
-                v-for="event in isEvent(date, hour)"
+                v-for="event in isEvent(events, date, hour)"
                 :key="event.id"
                 :current-date="date"
                 :event="event"
-                :overlapping-offset="overlappingOffset(event)"
+                :overlapping-offset="overlappingOffset(events, event)"
               />
             </div>
           </div>
@@ -71,7 +71,9 @@
 </template>
 
 <script setup lang="ts">
-import { HOURS, WEEKS } from '@/shared/constants/date'
+import { isCurrentDay, getDayByDate, getDayOfWeekByDate } from '../lib/date'
+import { isEvent, overlappingOffset } from '../lib/event'
+import { HOURS } from '@/shared/constants/date'
 import { Event } from '@/features/schedule/event'
 import { type IEvent } from '@/entities/schedule/event'
 import { DEFAULT_DAY_CELL_HEIGHT } from '@/shared/constants/sizes'
@@ -85,79 +87,6 @@ type Emits = {
   (e: 'select-day', date: Date): void
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 defineEmits<Emits>()
-
-const OVERLAPPING_OFFSET = 25
-
-function isEvent(date: Date, hour: string): IEvent[] | undefined {
-  const hourStart = hour.split(':')[0]
-
-  return props.events.filter((event) => {
-    const isTimeMatch = hourStart === event.startTime.split(':')[0]
-    const isDateInRange = date.getTime() >= event.startDate.getTime() && date.getTime() <= event.endDate.getTime()
-
-    if (event.startDate.getTime() !== event.endDate.getTime()) {
-      if (event.startDate.getTime() !== date.getTime()) {
-        return isDateInRange && hourStart === '00'
-      }
-    }
-
-    return isDateInRange && isTimeMatch
-  })
-}
-
-// const eventMap = computed<Record<number, Record<string, IEvent[]>>>(() => {
-//   return props.events.reduce<Record<number, Record<string, IEvent[]>>>((acc, event: Event) => {
-//     const timestamp = event.startDate.getTime();
-//     const startTime = event.startTime.split(':')[0]
-//
-//     if (!acc[timestamp]) acc[timestamp] = {};
-//     if (!acc[timestamp][startTime]) acc[timestamp][startTime] = [];
-//     acc[timestamp][startTime].push(event);
-//
-//     return acc;
-//   }, {} as Record<number, Record<string, IEvent[]>>);
-// });
-
-function overlappingOffset(event: IEvent) {
-  const count = props.events.filter((item) => {
-    const isDateInRange = event.startDate.getTime() >= item.startDate.getTime() && event.startDate.getTime() <= item.endDate.getTime()
-    const isNotEqual = event.id !== item.id
-    const condition =
-      event.startTime >= item.startTime && item.endTime > event.startTime && isNotEqual
-
-    if (item.startDate.getTime() !== item.endDate.getTime()) {
-      if (item.startDate.getTime() !== event.startDate.getTime() && item.endDate.getTime() !== event.endDate.getTime()) {
-        return true
-      }
-
-      return isDateInRange && item.endTime > event.startTime && isNotEqual
-    }
-
-    return isDateInRange && condition
-  })?.length
-
-  return count ? count * OVERLAPPING_OFFSET : 0
-}
-
-function getDayByDate(date: Date) {
-  return date.getDate()
-}
-
-function getDayOfWeekByDate(date: Date) {
-  const day = date.getDay()
-
-  return WEEKS[day === 0 ? 6 : day - 1]
-}
-
-function isCurrentDay(date: Date) {
-  const today = new Date()
-
-  return (
-    date.getFullYear() === today.getFullYear() &&
-    date.getMonth() === today.getMonth() &&
-    date.getDate() === today.getDate()
-  )
-}
 </script>

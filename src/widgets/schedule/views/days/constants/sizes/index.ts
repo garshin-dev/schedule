@@ -1,0 +1,1 @@
+export const OVERLAPPING_OFFSET = 25
