@@ -31,4 +31,6 @@ coverage
 
 *.tsbuildinfo
 
+*~
+
 ROADMAP.md
