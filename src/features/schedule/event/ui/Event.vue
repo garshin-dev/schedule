@@ -9,12 +9,25 @@
       marginLeft: `${overlappingOffset}px`,
       width: `calc(100% - ${overlappingOffset}px)`,
     }"
-    @mouseover="mouseOverHandler"
-    @mouseleave="mouseLeaveHandler"
+    @mouseover="onMouseOver"
+    @mouseleave="onMouseLeave"
   >
     <EventContent :event="event" :is-hovered="isHovered" />
-    <span v-if="overlappingOffset" class="absolute top-0 right-0" title="Overlapping problem">
-      (!)
+    <span v-if="overlappingOffset" class="absolute top-1 right-1" title="Overlapping problem">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4 text-red-500"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
     </span>
   </button>
 </template>
@@ -43,11 +56,11 @@ const { start, stop } = useTimeoutFn(
   { immediate: false },
 )
 
-const mouseOverHandler = () => {
+const onMouseOver = () => {
   start()
 }
 
-const mouseLeaveHandler = () => {
+const onMouseLeave = () => {
   stop()
   isHovered.value = false
 }
