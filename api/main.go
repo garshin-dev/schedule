@@ -113,28 +113,3 @@ func getUser(db *sql.DB) http.HandlerFunc {
         json.NewEncoder(w).Encode(user)
     }
 }
-
-// func deleteUser(db *sql.DB) http.HandlerFunc {
-//     return func(w http.ResponseWriter, r *http.Request) {
-//         params := mux.Vars(r)
-//         id := params["id"]
-//
-//         result, err := db.Exec("DELETE FROM users WHERE id=$1", id)
-//
-//         if err != nil {
-//             log.Fatal(err)
-//         }
-//
-//         rowsAffected, err := result.RowsAffected()
-//         if err != nil {
-//             log.Fatal(err)
-//         }
-//
-//         if rowsAffected == 0 {
-//             http.Error(w, "User not found", http.StatusNotFound)
-//             return
-//         }
-//
-//         w.WriteHeader(http.StatusNoContent)
-//     }
-// }
