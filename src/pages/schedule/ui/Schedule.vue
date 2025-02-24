@@ -1,92 +1,55 @@
 <template>
   <div class="px-3 py-4 flex flex-col items-start">
     <div class="flex gap-8 items-center mb-4">
-      <Select v-model="timeUnitOptions" placeholder="Choose" @select="timeUnitHandler" />
+      <ViewSwitch />
 
       <div class="flex gap-4">
-        <div class="flex gap-2">
+        <div v-if="params.year" class="flex gap-2">
           <span>Year:</span>
-          <span>{{ CURRENT_YEAR }}</span>
+          <span>{{ params.year }}</span>
         </div>
 
-        <div v-if="currentTimeUnit.value !== TimeUnits.Year" class="flex gap-2">
+        <div v-if="params.month" class="flex gap-2">
           <span>Month:</span>
-          <span class="uppercase">{{ MONTHS[CURRENT_MONTH.getMonth()] }}</span>
+          <span class="uppercase">{{ MONTHS[Number(params.month)] }}</span>
+        </div>
+
+        <div v-if="params.week" class="flex gap-2">
+          <span>Week:</span>
+          <span>{{ params.week }}</span>
+        </div>
+
+        <div v-if="params.startDay" class="flex gap-2">
+          <span>startDay:</span>
+          <span>{{ params.startDay }}</span>
+        </div>
+
+        <div v-if="params.endDay" class="flex gap-2">
+          <span>endDay:</span>
+          <span>{{ params.endDay }}</span>
         </div>
       </div>
     </div>
 
-    <YearView v-if="currentTimeUnit.value === TimeUnits.Year" />
-    <MonthView
-      v-else-if="currentTimeUnit.value === TimeUnits.Month"
-      :events="MOCK_EVENTS"
-      :selected-days="selectedDays"
-      @select-day="selectDay"
-    />
-    <DaysView v-else :events="MOCK_EVENTS" :selected-days="selectedDays" @select-day="selectDay" />
+    <YearView v-if="selectedView.value === ViewUnits.Year" />
+    <MonthView v-else-if="selectedView.value === ViewUnits.Month" :events="MOCK_EVENTS" />
+    <DaysView v-else :events="MOCK_EVENTS" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Item } from '@/shared/ui/Select/select.type.ts'
 import { YearView } from '@/widgets/schedule/views/year'
 import { MonthView } from '@/widgets/schedule/views/month'
 import type { IEvent } from '@/entities/schedule/event'
 import { DaysView } from '@/widgets/schedule/views/days'
-import {
-  getCurrentMonthDate,
-  getCurrentYear,
-  getDatesInRange,
-  getFirstDayOfWeek,
-  getFirstDayOfMonth,
-  getLastDayOfMonth,
-  getDaysInMonth,
-} from '../lib/date'
+import { useRoute } from 'vue-router'
+import { ViewSwitch } from '@/features/schedule/view-switch'
 import { MONTHS } from '@/shared/constants/date'
+import { useViewSwitch, ViewUnits } from '@/features/schedule/view-switch'
+const { selectedView } = useViewSwitch()
 
-const CURRENT_YEAR: number = getCurrentYear()
-const CURRENT_MONTH: Date = getCurrentMonthDate()
-const selectedDays = ref<Date[]>(getDates())
-
-enum TimeUnits {
-  Day = 'day',
-  Days = 'days',
-  Week = 'week',
-  Month = 'month',
-  Year = 'year',
-}
-
-const timeUnitOptions = ref<Item[]>([
-  {
-    name: 'Day',
-    value: TimeUnits.Day,
-    selected: false,
-  },
-  ...(selectedDays.value.length === 7
-    ? []
-    : [
-        {
-          name: `${selectedDays.value.length} days`,
-          value: TimeUnits.Days,
-          selected: true,
-        },
-      ]),
-  {
-    name: 'Week',
-    value: TimeUnits.Week,
-    selected: selectedDays.value.length === 7,
-  },
-  {
-    name: 'Month',
-    value: TimeUnits.Month,
-    selected: false,
-  },
-  {
-    name: 'Year',
-    value: TimeUnits.Year,
-    selected: false,
-  },
-])
+const route = useRoute()
+const params = route.params
 
 const MOCK_EVENTS: IEvent[] = [
   {
@@ -225,65 +188,4 @@ const MOCK_EVENTS: IEvent[] = [
     background: '#d1521c',
   },
 ]
-
-const currentTimeUnit = computed(
-  (): Item => timeUnitOptions.value.find((item) => item.selected) as Item,
-)
-
-function selectDay(date: Date) {
-  timeUnitOptions.value.forEach((item) => {
-    item.selected = item.value === TimeUnits.Day
-  })
-
-  selectedDays.value = getDatesInRange(1, date)
-}
-
-function getWeekDates() {
-  const today = new Date()
-  const firstDayOfWeek = getFirstDayOfWeek(today)
-  return getDatesInRange(7, firstDayOfWeek)
-}
-
-function getMonthDates() {
-  const firstDayOfMonth = getFirstDayOfMonth(CURRENT_YEAR, CURRENT_MONTH)
-  const lastDayOfMonth = getLastDayOfMonth(CURRENT_YEAR, CURRENT_MONTH)
-  const firstDayOfWeekOfMonth = getFirstDayOfWeek(firstDayOfMonth)
-
-  const daysInMonth = getDaysInMonth(CURRENT_YEAR, CURRENT_MONTH)
-
-  const firstDayOfMonthNum = firstDayOfMonth.getDay()
-  const lastDayOfMonthNum = lastDayOfMonth.getDay()
-
-  const daysBefore = firstDayOfMonthNum === 0 ? 6 : firstDayOfMonthNum - 1
-  const daysAfter = lastDayOfMonthNum === 0 ? 0 : 7 - lastDayOfMonthNum
-
-  const totalCount = daysInMonth + daysBefore + daysAfter
-
-  return getDatesInRange(totalCount, firstDayOfWeekOfMonth)
-}
-
-function getDate() {
-  return getDatesInRange(1)
-}
-
-function getDates() {
-  return getDatesInRange()
-}
-
-function timeUnitHandler(item: Item) {
-  switch (item.value) {
-    case TimeUnits.Day:
-      selectedDays.value = getDate()
-      break
-    case TimeUnits.Days:
-      selectedDays.value = getDates()
-      break
-    case TimeUnits.Week:
-      selectedDays.value = getWeekDates()
-      break
-    case TimeUnits.Month:
-      selectedDays.value = getMonthDates()
-      break
-  }
-}
 </script>
