@@ -1,4 +1,4 @@
-import {WEEKS} from "@/shared/constants/date";
+import { WEEKS } from '@/shared/constants/date'
 
 export function getDayByDate(date: Date) {
   return date.getDate()

@@ -37,7 +37,7 @@
           :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }"
         >
           <div
-            v-for="date in selectedDays"
+            v-for="date in displayDates"
             :key="date.toString()"
             class="border-r border-b border-b-black/10 border-r-black/10 flex flex-col gap-1"
             :style="{ height: DEFAULT_MONTH_CELL_HEIGHT + 'px' }"
@@ -98,24 +98,33 @@
 import { WEEKS } from '@/shared/constants/date'
 import { hexToRgba } from '@/shared/lib/color'
 import type { IEvent } from '@/entities/schedule/event'
+import { getWeekNumber } from '@/shared/lib/date'
+import { useRoute } from 'vue-router'
+import { getMonthDates } from '../lib/date'
 
 const DEFAULT_MONTH_CELL_HEIGHT = 140
 const MAX_MONTH_EVENT_COUNT = 3
+
+const route = useRoute()
+const params = route.params
+
+const year = Number(params.year)
+const month = Number(params.month)
 
 const isHovered = ref<boolean>(false) // todo: delete
 
 interface Props {
   events: IEvent[]
-  selectedDays: Date[]
 }
 
 type Emits = {
   (e: 'select-day', date: Date): void
-  (e: 'is-event', date: Date): IEvent
 }
 
 const props = defineProps<Props>()
 defineEmits<Emits>()
+
+const displayDates = ref<Date[]>(getMonthDates(year, month))
 
 const eventMap = computed<Record<number, IEvent[]>>(() => {
   return props.events.reduce<Record<number, IEvent[]>>(
@@ -129,13 +138,5 @@ const eventMap = computed<Record<number, IEvent[]>>(() => {
   )
 })
 
-const numberOfWeeks = [...new Set(props.selectedDays.map((date) => getWeekNumber(date)))]
-
-function getWeekNumber(date: Date) {
-  const d = new Date(date)
-  d.setHours(0, 0, 0, 0)
-  d.setDate(d.getDate() + 4 - (d.getDay() || 7))
-  const yearStart = new Date(d.getFullYear(), 0, 1)
-  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7)
-}
+const numberOfWeeks = [...new Set(displayDates.value.map((date) => getWeekNumber(date)))]
 </script>
