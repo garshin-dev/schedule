@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Item } from './select.type'
 import { onClickOutside } from '@vueuse/core'
+import type { Item } from './select.type'
 
 interface Props {
   placeholder: string

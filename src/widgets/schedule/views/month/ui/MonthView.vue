@@ -95,13 +95,15 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
+import type { IEvent } from '@/entities/schedule/event'
 import { WEEKS } from '@/shared/constants/date'
 import { hexToRgba } from '@/shared/lib/color'
-import type { IEvent } from '@/entities/schedule/event'
 import { getWeekNumber } from '@/shared/lib/date'
-import { useRoute } from 'vue-router'
 import { getMonthDates } from '../lib/date'
 
+const props = defineProps<Props>()
+defineEmits<Emits>()
 const DEFAULT_MONTH_CELL_HEIGHT = 140
 const MAX_MONTH_EVENT_COUNT = 3
 
@@ -120,9 +122,6 @@ interface Props {
 type Emits = {
   (e: 'select-day', date: Date): void
 }
-
-const props = defineProps<Props>()
-defineEmits<Emits>()
 
 const displayDates = ref<Date[]>(getMonthDates(year, month))
 

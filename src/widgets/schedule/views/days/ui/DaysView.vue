@@ -72,15 +72,13 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-
-import { isCurrentDay, getDayByDate, getDayOfWeekByDate } from '../lib/date'
-import { isEvent, overlappingOffset } from '../lib/event'
-
-import type { IEvent } from '@/entities/schedule/event'
 import { Event } from '@/features/schedule/event'
+import type { IEvent } from '@/entities/schedule/event'
 import { HOURS } from '@/shared/constants/date'
 import { DEFAULT_DAY_CELL_HEIGHT } from '@/shared/constants/sizes'
 import { getDatesInRange, getDateByWeek } from '@/shared/lib/date'
+import { isCurrentDay, getDayByDate, getDayOfWeekByDate } from '../lib/date'
+import { isEvent, overlappingOffset } from '../lib/event'
 
 interface Props {
   events: IEvent[]

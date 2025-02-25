@@ -15,6 +15,10 @@
 </template>
 
 <script setup lang="ts">
+const props = withDefaults(defineProps<Props>(), {
+  variant: Variants.Primary,
+})
+
 enum Variants {
   Primary = 'primary',
   Secondary = 'secondary',
@@ -27,10 +31,6 @@ interface Props {
   variant?: Variants
   loading?: boolean
 }
-
-const props = withDefaults(defineProps<Props>(), {
-  variant: Variants.Primary,
-})
 
 const component = computed(() => (props.to ? 'RouterLink' : 'button'))
 </script>

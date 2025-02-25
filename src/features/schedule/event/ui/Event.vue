@@ -34,8 +34,8 @@
 
 <script setup lang="ts">
 import { useTimeoutFn } from '@vueuse/core'
-import type { IEvent } from '@/entities/schedule/event'
 import { EventContent } from '@/entities/schedule/event'
+import type { IEvent } from '@/entities/schedule/event'
 import { getEventHeight, getEventOffset } from '../lib/sizes'
 
 interface Props {

@@ -40,20 +40,18 @@
 </template>
 
 <script setup lang="ts">
-import { YearView } from '@/widgets/schedule/views/year'
-import { MonthView } from '@/widgets/schedule/views/month'
-import type { IEvent } from '@/entities/schedule/event'
-import { DaysView } from '@/widgets/schedule/views/days'
 import { useRoute } from 'vue-router'
-import { ViewSwitch } from '@/features/schedule/view-switch'
+import { DaysView } from '@/widgets/schedule/views/days'
+import { MonthView } from '@/widgets/schedule/views/month'
+import { YearView } from '@/widgets/schedule/views/year'
+import { ViewSwitch, useViewSwitch, ViewUnits } from '@/features/schedule/view-switch'
+import type { IEvent } from '@/entities/schedule/event'
 import { MONTHS } from '@/shared/constants/date'
-import { useViewSwitch, ViewUnits } from '@/features/schedule/view-switch'
+
 const { selectedView } = useViewSwitch()
 
 const route = useRoute()
 const params = route.params
-
-console.log('params', params)
 
 const MOCK_EVENTS: IEvent[] = [
   {
