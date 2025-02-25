@@ -1,5 +1,5 @@
 <template>
-  <Select v-model="viewOptions" placeholder="Choose" @select="viewHandler" />
+  <Select v-model="viewOptions" placeholder="Choose" @select="viewHandler" immutable />
 </template>
 
 <script setup lang="ts">
