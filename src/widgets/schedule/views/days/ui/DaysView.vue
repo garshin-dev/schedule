@@ -71,13 +71,15 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
+
 import { isCurrentDay, getDayByDate, getDayOfWeekByDate } from '../lib/date'
 import { isEvent, overlappingOffset } from '../lib/event'
-import { HOURS } from '@/shared/constants/date'
+
+import type { IEvent } from '@/entities/schedule/event'
 import { Event } from '@/features/schedule/event'
-import { type IEvent } from '@/entities/schedule/event'
+import { HOURS } from '@/shared/constants/date'
 import { DEFAULT_DAY_CELL_HEIGHT } from '@/shared/constants/sizes'
-import { useRoute } from 'vue-router'
 import { getDatesInRange, getDateByWeek } from '@/shared/lib/date'
 
 interface Props {
@@ -95,14 +97,11 @@ const route = useRoute()
 const params = route.params
 
 const year = Number(params.year)
-const month = Number(params.month)
 const week = Number(params.week)
 const startDay = Number(params.startDay)
 const endDay = Number(params.endDay)
 
-const limit = endDay 
-  ? endDay - startDay + 1 
-  : startDay ? 1 : 7
+const limit = endDay ? endDay - startDay + 1 : startDay ? 1 : 7
 
 const weekDate = getDateByWeek(year, week)
 
