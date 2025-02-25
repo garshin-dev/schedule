@@ -39,13 +39,14 @@ import { onClickOutside } from '@vueuse/core'
 
 interface Props {
   placeholder: string
+  immutable?: boolean
 }
 
 type Emits = {
   (e: 'select', item: Item): void
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const modelItems = defineModel<Item[]>({ required: true })
@@ -66,9 +67,11 @@ const closeDropdown = () => {
 const selectHandler = (item: Item) => {
   closeDropdown()
 
-  modelItems.value.forEach((modelItem) => {
-    modelItem.selected = modelItem.value === item.value
-  })
+  if (!props.immutable) {
+    modelItems.value.forEach((modelItem) => {
+      modelItem.selected = modelItem.value === item.value
+    })
+  }
 
   emit('select', item)
 }

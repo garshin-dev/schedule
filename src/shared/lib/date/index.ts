@@ -24,14 +24,9 @@ export function getWeekNumber(date: Date) {
 }
 
 export function getDateByWeek(year: number, week: number) {
-  // Создаем дату на 4 января указанного года (всегда попадает на первую неделю по ISO)
   const date = new Date(year, 0, 4)
-  
-  // Получаем понедельник той недели, на которую попадает 4 января
   const firstWeekStart = new Date(date.setDate(date.getDate() - (date.getDay() || 7) + 1))
-  
-  // Добавляем нужное количество недель
   firstWeekStart.setDate(firstWeekStart.getDate() + (week - 1) * 7)
-  
+
   return firstWeekStart
 }
