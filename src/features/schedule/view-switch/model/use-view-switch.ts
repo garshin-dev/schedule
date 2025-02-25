@@ -5,7 +5,7 @@ import { getWeekNumber } from '@/shared/lib/date'
 const currentDate = new Date()
 
 const CURRENT_YEAR: number = currentDate.getFullYear()
-const CURRENT_MONTH: number = currentDate.getMonth()
+const CURRENT_MONTH: number = currentDate.getMonth() + 1
 const CURRENT_WEEK: number = getWeekNumber(currentDate)
 const CURRENT_START_DAY: number = 1
 const CURRENT_END_DAY: number = 4
@@ -47,25 +47,23 @@ export const useViewSwitch = () => {
     return viewOptions.value.find((option) => option.selected)!
   })
 
-  const viewHandler = (option: Option) => {
+  const viewHandler = async (option: Option) => {
     switch (option.value) {
       case ViewUnits.Day:
-        router.push({
-          name: 'schedule',
+        await router.push({
+          name: 'schedule-days',
           params: {
             year: CURRENT_YEAR,
-            month: CURRENT_MONTH,
             week: CURRENT_WEEK,
             startDay: CURRENT_START_DAY,
           },
         })
         break
       case ViewUnits.Days:
-        router.push({
-          name: 'schedule',
+        await router.push({
+          name: 'schedule-days',
           params: {
             year: CURRENT_YEAR,
-            month: CURRENT_MONTH,
             week: CURRENT_WEEK,
             startDay: CURRENT_START_DAY,
             endDay: CURRENT_END_DAY,
@@ -73,18 +71,26 @@ export const useViewSwitch = () => {
         })
         break
       case ViewUnits.Week:
-        router.push({
-          name: 'schedule',
-          params: { year: CURRENT_YEAR, month: CURRENT_MONTH, week: CURRENT_WEEK },
+        await router.push({
+          name: 'schedule-week',
+          params: { year: CURRENT_YEAR, week: CURRENT_WEEK },
         })
         break
       case ViewUnits.Month:
-        router.push({ name: 'schedule', params: { year: CURRENT_YEAR, month: CURRENT_MONTH } })
+        await router.push({
+          name: 'schedule-month',
+          params: { year: CURRENT_YEAR, month: CURRENT_MONTH },
+        })
         break
       case ViewUnits.Year:
-        router.push({ name: 'schedule', params: { year: CURRENT_YEAR } })
+        await router.push({
+          name: 'schedule-year',
+          params: { year: CURRENT_YEAR },
+        })
         break
     }
+
+    selectView(option.value)
   }
 
   const defineView = (params: Params) => {
@@ -111,9 +117,9 @@ export const useViewSwitch = () => {
     })
   }
 
-  console.log('defefefe')
-
-  defineView(params)
+  if (!selectedView.value) {
+    defineView(params)
+  }
 
   return {
     viewOptions,
