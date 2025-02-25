@@ -28,6 +28,8 @@
           <span>endDay:</span>
           <span>{{ params.endDay }}</span>
         </div>
+
+        selectedView: {{ selectedView }}
       </div>
     </div>
 
@@ -50,6 +52,8 @@ const { selectedView } = useViewSwitch()
 
 const route = useRoute()
 const params = route.params
+
+console.log('params', params)
 
 const MOCK_EVENTS: IEvent[] = [
   {
