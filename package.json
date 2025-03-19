@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "-": "^0.0.1",
-    "@vueuse/core": "^12.2.0",
+    "@vueuse/core": "^12.7.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "pinia": "^2.3.0",
