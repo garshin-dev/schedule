@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { getWeekNumber } from '@/shared/lib/date'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +13,15 @@ const router = createRouter({
       path: '/schedule',
       name: 'schedule',
       component: () => import('@/pages/schedule/ui/Schedule.vue'),
+      redirect: () => {
+        const date = new Date()
+        const year = date.getFullYear()
+        const week = getWeekNumber(date)
+
+        return {
+          path: `/schedule/week/${year}/${week}`,
+        }
+      },
       children: [
         {
           path: 'year/:year',
