@@ -42,7 +42,6 @@ const viewOptions = ref<Option[]>([
 export const useViewSwitch = () => {
   const router = useRouter()
   const route = useRoute()
-  const params = route.params
 
   const selectedView = computed<Option>(() => {
     return viewOptions.value.find((option) => option.selected)!
@@ -118,9 +117,11 @@ export const useViewSwitch = () => {
     })
   }
 
-  if (!selectedView.value) {
-    defineView(params)
-  }
+  watch(
+    () => route.params,
+    (params: Params) => defineView(params),
+    { immediate: true },
+  )
 
   return {
     viewOptions,

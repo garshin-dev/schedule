@@ -1,4 +1,4 @@
-import type { IEvent } from '@/entities/schedule/event'
+import type { IEvent } from '@/entities/schedule/event-day'
 import { OVERLAPPING_OFFSET } from '../../constants/sizes'
 
 export function isEvent(events: IEvent[], date: Date, hour: string): IEvent[] | undefined {
@@ -28,7 +28,7 @@ export function overlappingOffset(events: IEvent[], event: IEvent) {
     const condition =
       event.startTime >= item.startTime && item.endTime > event.startTime && isNotEqual
 
-    if (item.startDate.getTime() !== item.endDate.getTime()) {
+    if (isDateInRange && item.startDate.getTime() !== item.endDate.getTime()) {
       if (
         item.startDate.getTime() !== event.startDate.getTime() &&
         item.endDate.getTime() !== event.endDate.getTime()

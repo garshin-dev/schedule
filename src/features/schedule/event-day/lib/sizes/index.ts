@@ -1,4 +1,4 @@
-import type { IEvent } from '@/entities/schedule/event'
+import type { IEvent } from '@/entities/schedule/event-day'
 import { DEFAULT_DAY_CELL_HEIGHT } from '@/shared/constants/sizes'
 
 export function getEventOffset(event: IEvent, currentDate: Date) {

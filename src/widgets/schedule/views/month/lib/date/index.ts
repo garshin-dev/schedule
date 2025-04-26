@@ -46,3 +46,15 @@ export function getFirstDayOfMonth(year: number, month: number) {
 export function getLastDayOfMonth(year: number, month: number) {
   return new Date(year, month, 0)
 }
+
+export function getDatesBetween(startDate: Date, endDate: Date): Date[] {
+  const dates: Date[] = []
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    dates.push(new Date(d))
+  }
+
+  return dates
+}

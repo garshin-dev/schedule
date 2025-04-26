@@ -2,10 +2,10 @@
   <div class="flex flex-col w-full">
     <div
       class="grid grid-cols-7 w-full pl-14"
-      :style="{ gridTemplateColumns: `repeat(${displayDates.length}, minmax(0, 1fr))` }"
+      :style="{ gridTemplateColumns: `repeat(${dates.length}, minmax(0, 1fr))` }"
     >
       <div
-        v-for="date in displayDates"
+        v-for="date in dates"
         :key="date.toString()"
         class="text-center border-b border-b-black/10 pb-2"
       >
@@ -13,7 +13,7 @@
           class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md anim hover:bg-black/10"
           :class="{
             [isCurrentDay(date) ? 'text-black' : 'text-black/30 hover:text-black/50']: true,
-            'pointer-events-none': displayDates.length === 1,
+            'pointer-events-none': dates.length === 1,
           }"
           @click="$emit('select-day', date)"
         >
@@ -41,14 +41,10 @@
       </div>
       <div class="w-full h-full">
         <div
-          class="grid grid-cols-7 w-full"
-          :style="{ gridTemplateColumns: `repeat(${displayDates.length}, minmax(0, 1fr))` }"
+          class="grid w-full"
+          :style="{ gridTemplateColumns: `repeat(${dates.length}, minmax(0, 1fr))` }"
         >
-          <div
-            v-for="date in displayDates"
-            :key="date.toString()"
-            class="border-r border-r-black/10"
-          >
+          <div v-for="date in dates" :key="date.toString()" class="border-r border-r-black/10">
             <div
               v-for="hour in HOURS"
               :key="hour"
@@ -72,8 +68,9 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { Event } from '@/features/schedule/event'
-import type { IEvent } from '@/entities/schedule/event'
+import type { RouteParams } from 'vue-router'
+import { Event } from '@/features/schedule/event-day'
+import type { IEvent } from '@/entities/schedule/event-day'
 import { HOURS } from '@/shared/constants/date'
 import { DEFAULT_DAY_CELL_HEIGHT } from '@/shared/constants/sizes'
 import { getDatesInRange, getDateByWeek } from '@/shared/lib/date'
@@ -92,20 +89,29 @@ defineProps<Props>()
 defineEmits<Emits>()
 
 const route = useRoute()
-const params = route.params
 
-const year = Number(params.year)
-const week = Number(params.week)
-const startDay = Number(params.startDay)
-const endDay = Number(params.endDay)
+const dates = ref<Date[]>([])
 
-const limit = endDay ? endDay - startDay + 1 : startDay ? 1 : 7
+const displayDates = (params: RouteParams) => {
+  const year = Number(params.year)
+  const week = Number(params.week)
+  const startDay = Number(params.startDay)
+  const endDay = Number(params.endDay)
 
-const weekDate = getDateByWeek(year, week)
+  const limit = endDay ? endDay - startDay + 1 : startDay ? 1 : 7
 
-if (startDay) {
-  weekDate.setDate(weekDate.getDate() + startDay - 1)
+  const weekDate = getDateByWeek(year, week)
+
+  if (startDay) {
+    weekDate.setDate(weekDate.getDate() + startDay - 1)
+  }
+
+  dates.value = getDatesInRange(limit, weekDate)
 }
 
-const displayDates = ref<Date[]>(getDatesInRange(limit, weekDate))
+watch(
+  () => route.params,
+  (params) => displayDates(params),
+  { immediate: true },
+)
 </script>
