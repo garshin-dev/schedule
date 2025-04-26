@@ -19,7 +19,7 @@
     >
       <div
         v-show="isShow"
-        class="flex flex-col absolute bg-white border border-black z-10 top-full mt-0.5 w-full"
+        class="flex flex-col absolute bg-white border border-black z-50 top-full mt-0.5 w-full"
       >
         <ul class="flex flex-col">
           <li v-for="item in modelItems" :key="item.name">
