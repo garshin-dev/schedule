@@ -4,7 +4,7 @@ import { getLastDayOfMonth, getFirstDayOfMonth } from './index'
 describe('getLastDayOfMonth', () => {
   it('should return last day of January', () => {
     const month = new Date(2024, 0, 15)
-    const result = getLastDayOfMonth(2024, month)
+    const result = getLastDayOfMonth(2024, month.getMonth() + 1)
 
     expect(result.getFullYear()).toBe(2024)
     expect(result.getMonth()).toBe(0)
@@ -13,7 +13,7 @@ describe('getLastDayOfMonth', () => {
 
   it('should return last day of December', () => {
     const month = new Date(2024, 11, 25)
-    const result = getLastDayOfMonth(2024, month)
+    const result = getLastDayOfMonth(2024, month.getMonth() + 1)
 
     expect(result.getFullYear()).toBe(2024)
     expect(result.getMonth()).toBe(11)
@@ -22,7 +22,7 @@ describe('getLastDayOfMonth', () => {
 
   it('should handle leap year February', () => {
     const month = new Date(2024, 1, 15)
-    const result = getLastDayOfMonth(2024, month)
+    const result = getLastDayOfMonth(2024, month.getMonth() + 1)
 
     expect(result.getFullYear()).toBe(2024)
     expect(result.getMonth()).toBe(1)
@@ -31,7 +31,7 @@ describe('getLastDayOfMonth', () => {
 
   it('should handle non-leap year February', () => {
     const month = new Date(2023, 1, 15)
-    const result = getLastDayOfMonth(2023, month)
+    const result = getLastDayOfMonth(2023, month.getMonth() + 1)
 
     expect(result.getFullYear()).toBe(2023)
     expect(result.getMonth()).toBe(1)
@@ -40,7 +40,7 @@ describe('getLastDayOfMonth', () => {
 
   it('should handle different year parameter', () => {
     const month = new Date(2024, 5, 15)
-    const result = getLastDayOfMonth(2025, month)
+    const result = getLastDayOfMonth(2025, month.getMonth() + 1)
 
     expect(result.getFullYear()).toBe(2025)
     expect(result.getMonth()).toBe(5)
@@ -51,7 +51,7 @@ describe('getLastDayOfMonth', () => {
 describe('getFirstDayOfMonth', () => {
   it('should return first day of January', () => {
     const month = new Date(2024, 0, 15)
-    const result = getFirstDayOfMonth(2024, month)
+    const result = getFirstDayOfMonth(2024, month.getMonth() + 1)
 
     expect(result.getFullYear()).toBe(2024)
     expect(result.getMonth()).toBe(0)
@@ -60,7 +60,7 @@ describe('getFirstDayOfMonth', () => {
 
   it('should return first day of December', () => {
     const month = new Date(2024, 11, 25)
-    const result = getFirstDayOfMonth(2024, month)
+    const result = getFirstDayOfMonth(2024, month.getMonth() + 1)
 
     expect(result.getFullYear()).toBe(2024)
     expect(result.getMonth()).toBe(11)
@@ -69,7 +69,7 @@ describe('getFirstDayOfMonth', () => {
 
   it('should handle leap year February', () => {
     const month = new Date(2024, 1, 15)
-    const result = getFirstDayOfMonth(2024, month)
+    const result = getFirstDayOfMonth(2024, month.getMonth() + 1)
 
     expect(result.getFullYear()).toBe(2024)
     expect(result.getMonth()).toBe(1)
@@ -78,7 +78,7 @@ describe('getFirstDayOfMonth', () => {
 
   it('should handle different year parameter', () => {
     const month = new Date(2024, 5, 15)
-    const result = getFirstDayOfMonth(2025, month)
+    const result = getFirstDayOfMonth(2025, month.getMonth() + 1)
 
     expect(result.getFullYear()).toBe(2025)
     expect(result.getMonth()).toBe(5)
