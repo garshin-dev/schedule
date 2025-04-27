@@ -6,6 +6,6 @@ describe('getYearDates', () => {
     const year = 2025
     const result = getYearDates(year)
 
-    expect(result.length).toBe(11)
+    expect(result.length).toBe(12)
   })
 })
