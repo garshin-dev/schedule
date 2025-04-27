@@ -1,9 +1,6 @@
 <template>
   <div class="flex flex-col w-full">
-    <div
-      class="grid grid-cols-7 w-full pl-10"
-      :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }"
-    >
+    <div class="grid w-full pl-10" :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }">
       <div
         v-for="dayOfWeek in WEEKS"
         :key="dayOfWeek"
