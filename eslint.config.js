@@ -3,13 +3,21 @@ import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 import vueTsEslintConfig from '@vue/eslint-config-typescript'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintPluginImport from 'eslint-plugin-import'
-import eslintPluginTailwindcss from 'eslint-plugin-tailwindcss'
+// import eslintPluginTailwindcss from 'eslint-plugin-tailwindcss' // wait for an update v.4.0 or delete
 import pluginVue from 'eslint-plugin-vue'
 
 export default [
   {
     name: 'app/files-to-lint',
     files: ['**/*.{ts,mts,vue}'],
+    languageOptions: {
+      parser: 'vue-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+        project: ['tsconfig.app.json'],
+        extraFileExtensions: ['.vue'],
+      },
+    },
   },
   {
     name: 'app/files-to-ignore',
@@ -59,13 +67,13 @@ export default [
       'vue/no-empty-component-block': 'error',
       'vue/no-static-inline-styles': 'error',
       'vue/padding-line-between-blocks': 'error',
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          prefer: 'type-imports',
-          disallowTypeAnnotations: false,
-        },
-      ],
+      // '@typescript-eslint/consistent-type-imports': [
+      //   'error',
+      //   {
+      //     prefer: 'type-imports',
+      //     disallowTypeAnnotations: false,
+      //   },
+      // ],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': 'error',
       'import/no-duplicates': 'error',
@@ -121,7 +129,7 @@ export default [
   {
     plugins: {
       import: eslintPluginImport,
-      tailwindcss: eslintPluginTailwindcss,
+      // tailwindcss: eslintPluginTailwindcss
     },
   },
   ...vueTsEslintConfig(),
