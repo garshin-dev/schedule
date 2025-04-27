@@ -27,3 +27,16 @@ export const showWeek = async (date: Date, router: ReturnType<typeof useRouter>)
     },
   })
 }
+
+export const showMonth = async (date: Date, router: ReturnType<typeof useRouter>) => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+
+  await router.push({
+    name: 'schedule-month',
+    params: {
+      year: year,
+      month: month,
+    },
+  })
+}

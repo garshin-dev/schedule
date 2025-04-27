@@ -1,6 +1,6 @@
 import { getDatesInRange } from '@/shared/lib/date'
 
-export function getMonthDates(year: number, month: number) {
+export function getMonthDates(year: number, month: number, sixWeek?: boolean) {
   const firstDayOfMonth = getFirstDayOfMonth(year, month)
   const lastDayOfMonth = getLastDayOfMonth(year, month)
   const firstDayOfWeekOfMonth = getFirstDayOfWeek(firstDayOfMonth)
@@ -13,7 +13,9 @@ export function getMonthDates(year: number, month: number) {
   const daysBefore = firstDayOfMonthNum === 0 ? 6 : firstDayOfMonthNum - 1
   const daysAfter = lastDayOfMonthNum === 0 ? 0 : 7 - lastDayOfMonthNum
 
-  const totalCount = daysInMonth + daysBefore + daysAfter
+  let totalCount = daysInMonth + daysBefore + daysAfter
+
+  if (totalCount === 35 && sixWeek) totalCount += 7
 
   return getDatesInRange(totalCount, firstDayOfWeekOfMonth)
 }

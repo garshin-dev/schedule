@@ -34,7 +34,12 @@
       </div>
     </div>
 
-    <YearView v-if="selectedView.value === ViewUnits.Year" />
+    <YearView
+      v-if="selectedView.value === ViewUnits.Year"
+      @select-day="onSelectDay"
+      @select-week="onSelectWeek"
+      @select-month="onSelectMonth"
+    />
     <MonthView
       v-else-if="selectedView.value === ViewUnits.Month"
       :events="MOCK_EVENTS"
@@ -53,7 +58,7 @@ import { YearView } from '@/widgets/schedule/views/year'
 import { ViewSwitch, useViewSwitch, ViewUnits } from '@/features/schedule/view-switch'
 import type { IEvent } from '@/entities/schedule/event-day'
 import { MONTHS } from '@/shared/constants/date'
-import { showDay, showWeek } from '../lib/date'
+import { showDay, showWeek, showMonth } from '../lib/date'
 
 const { selectedView } = useViewSwitch()
 
@@ -205,5 +210,9 @@ const onSelectDay = (date: Date) => {
 
 const onSelectWeek = (date: Date) => {
   showWeek(date, router)
+}
+
+const onSelectMonth = (date: Date) => {
+  showMonth(date, router)
 }
 </script>
