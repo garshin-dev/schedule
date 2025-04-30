@@ -1,7 +1,7 @@
 import { useRouter, useRoute } from 'vue-router'
 import { getWeekNumber } from '@/shared/lib/date'
-import { ViewUnits } from './view-switch.types'
-import type { Option, Params } from './view-switch.types'
+import { ViewUnits } from '../model/view-switch.types.ts'
+import type { Option, Params } from '../model/view-switch.types.ts'
 
 const currentDate = new Date()
 

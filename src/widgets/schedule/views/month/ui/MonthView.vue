@@ -59,6 +59,7 @@
                 </button>
                 <button
                   class="anim ml-auto size-8 rounded-full font-bold hover:bg-black/10"
+                  :class="isThisMonth(date, month) ? 'text-black' : 'text-black/30'"
                   @click="$emit('select-day', date)"
                 >
                   {{ date.getDate() }}
@@ -68,6 +69,7 @@
             <button
               v-else
               class="anim mt-auto ml-auto size-8 rounded-full font-bold hover:bg-black/10"
+              :class="isThisMonth(date, month) ? 'text-black' : 'text-black/30'"
               @click="$emit('select-day', date)"
             >
               {{ date.getDate() }}
@@ -85,7 +87,7 @@ import { Event } from '@/features/schedule/event-month'
 import type { IEvent } from '@/entities/schedule/event-day'
 import { WEEK_DAYS } from '@/shared/constants/date'
 import { getWeekNumber } from '@/shared/lib/date'
-import { getMonthDates, getDatesBetween } from '../lib/date'
+import { getMonthDates, getDatesBetween, isThisMonth } from '../lib/date'
 
 interface Props {
   events: IEvent[]

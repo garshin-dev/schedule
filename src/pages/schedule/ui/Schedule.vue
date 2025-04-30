@@ -1,37 +1,8 @@
 <template>
   <div class="flex flex-col items-start px-3 py-4">
-    <div class="mb-4 flex items-center gap-8">
+    <div class="mb-4 flex items-center gap-4">
       <ViewSwitch />
-
-      <div class="flex gap-4">
-        <div v-if="params.year" class="flex gap-2">
-          <span>Year:</span>
-          <span>{{ params.year }}</span>
-        </div>
-
-        <div v-if="params.month" class="flex gap-2">
-          <span>Month:</span>
-          <span class="uppercase">{{ MONTHS[Number(params.month)] }}</span>
-        </div>
-
-        <div v-if="params.week" class="flex gap-2">
-          <span>Week:</span>
-          <span>{{ params.week }}</span>
-        </div>
-
-        <div v-if="params.startDay" class="flex gap-2">
-          <span>startDay:</span>
-          <span>{{ params.startDay }}</span>
-        </div>
-
-        <div v-if="params.endDay" class="flex gap-2">
-          <span>endDay:</span>
-          <span>{{ params.endDay }}</span>
-        </div>
-
-        selectedView: {{ selectedView }}
-        <br />
-      </div>
+      <TimeUnitSwitch v-if="timeUnitType" :type="timeUnitType" />
     </div>
 
     <YearView
@@ -52,20 +23,18 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { DaysView } from '@/widgets/schedule/views/days'
 import { MonthView } from '@/widgets/schedule/views/month'
 import { YearView } from '@/widgets/schedule/views/year'
+import { TimeUnitSwitch, TimeUnits } from '@/features/schedule/time-unit-switch'
 import { ViewSwitch, useViewSwitch, ViewUnits } from '@/features/schedule/view-switch'
 import type { IEvent } from '@/entities/schedule/event-day'
-import { MONTHS } from '@/shared/constants/date'
 import { showDay, showWeek, showMonth } from '../lib/date'
 
 const { selectedView } = useViewSwitch()
 
-const route = useRoute()
 const router = useRouter()
-const params = route.params
 
 const MOCK_EVENTS: IEvent[] = [
   {
@@ -204,6 +173,19 @@ const MOCK_EVENTS: IEvent[] = [
     background: '#d1521c',
   },
 ]
+
+const timeUnitType = computed(() => {
+  switch (selectedView.value.value) {
+    case ViewUnits.Week:
+      return TimeUnits.Weeks
+    case ViewUnits.Month:
+      return TimeUnits.Months
+    case ViewUnits.Year:
+      return TimeUnits.Years
+    default:
+      return null
+  }
+})
 
 const onSelectDay = (date: Date) => {
   showDay(date, router)
