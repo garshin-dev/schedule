@@ -1,13 +1,13 @@
 <template>
-  <div class="flex flex-col w-full">
+  <div class="flex w-full flex-col">
     <div class="grid w-full pl-10" :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }">
       <div
-        v-for="dayOfWeek in WEEKS"
+        v-for="dayOfWeek in WEEK_DAYS"
         :key="dayOfWeek"
-        class="text-center border-b border-b-black/10 pb-2"
+        class="border-b border-b-black/10 pb-2 text-center"
       >
         <div
-          class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md anim text-black"
+          class="anim flex h-auto w-full flex-col items-center gap-1 rounded-md text-black uppercase"
         >
           <span>
             {{ dayOfWeek }}
@@ -16,30 +16,30 @@
       </div>
     </div>
     <div class="flex w-full">
-      <div class="flex flex-col items-start border-r border-r-black/10 min-w-10">
+      <div class="flex min-w-10 flex-col items-start border-r border-r-black/10">
         <div
           v-for="[week, date] in numberOfWeeks"
           :key="week"
-          class="text-black/80 flex items-center justify-center w-full"
+          class="flex w-full items-center justify-center text-black/80"
           :style="{ height: DEFAULT_MONTH_CELL_HEIGHT + 'px' }"
         >
           <button
-            class="anim hover:bg-black/10 rounded-full size-8 font-bold"
+            class="anim size-8 rounded-full font-bold hover:bg-black/10"
             @click="$emit('select-week', date)"
           >
             {{ week }}
           </button>
         </div>
       </div>
-      <div class="flex flex-col w-full">
+      <div class="flex w-full flex-col">
         <div
-          class="grid grid-cols-7 w-full"
+          class="grid w-full grid-cols-7"
           :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }"
         >
           <div
             v-for="date in displayDates"
             :key="date.toString()"
-            class="border-r border-b border-b-black/10 border-r-black/10 flex flex-col gap-1"
+            class="flex flex-col gap-1 border-r border-b border-r-black/10 border-b-black/10"
             :style="{ height: DEFAULT_MONTH_CELL_HEIGHT + 'px' }"
           >
             <template v-if="eventMap[date.getTime()]">
@@ -52,13 +52,13 @@
               <div class="mt-auto flex gap-1">
                 <button
                   v-if="eventMap[date.getTime()].length > MAX_MONTH_EVENT_COUNT"
-                  class="underline hover:no-underline py-1 px-2"
+                  class="px-2 py-1 underline hover:no-underline"
                   @click="$emit('select-day', date)"
                 >
                   Show more ({{ eventMap[date.getTime()].length - MAX_MONTH_EVENT_COUNT }})
                 </button>
                 <button
-                  class="ml-auto anim hover:bg-black/10 rounded-full size-8 font-bold"
+                  class="anim ml-auto size-8 rounded-full font-bold hover:bg-black/10"
                   @click="$emit('select-day', date)"
                 >
                   {{ date.getDate() }}
@@ -67,7 +67,7 @@
             </template>
             <button
               v-else
-              class="mt-auto ml-auto anim hover:bg-black/10 rounded-full size-8 font-bold"
+              class="anim mt-auto ml-auto size-8 rounded-full font-bold hover:bg-black/10"
               @click="$emit('select-day', date)"
             >
               {{ date.getDate() }}
@@ -83,20 +83,9 @@
 import { useRoute } from 'vue-router'
 import { Event } from '@/features/schedule/event-month'
 import type { IEvent } from '@/entities/schedule/event-day'
-import { WEEKS } from '@/shared/constants/date'
+import { WEEK_DAYS } from '@/shared/constants/date'
 import { getWeekNumber } from '@/shared/lib/date'
 import { getMonthDates, getDatesBetween } from '../lib/date'
-
-const props = defineProps<Props>()
-defineEmits<Emits>()
-const DEFAULT_MONTH_CELL_HEIGHT = 140
-const MAX_MONTH_EVENT_COUNT = 3
-
-const route = useRoute()
-const params = route.params
-
-const year = Number(params.year)
-const month = Number(params.month)
 
 interface Props {
   events: IEvent[]
@@ -105,6 +94,18 @@ interface Props {
 type Emits = {
   (e: 'select-day' | 'select-week', date: Date): void
 }
+
+const props = defineProps<Props>()
+defineEmits<Emits>()
+
+const DEFAULT_MONTH_CELL_HEIGHT = 140
+const MAX_MONTH_EVENT_COUNT = 3
+
+const route = useRoute()
+const params = route.params
+
+const year = Number(params.year)
+const month = Number(params.month)
 
 const displayDates = ref<Date[]>(getMonthDates(year, month))
 

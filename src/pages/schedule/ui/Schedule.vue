@@ -1,6 +1,6 @@
 <template>
-  <div class="px-3 py-4 flex flex-col items-start">
-    <div class="flex gap-8 items-center mb-4">
+  <div class="flex flex-col items-start px-3 py-4">
+    <div class="mb-4 flex items-center gap-8">
       <ViewSwitch />
 
       <div class="flex gap-4">
@@ -36,6 +36,7 @@
 
     <YearView
       v-if="selectedView.value === ViewUnits.Year"
+      :events="MOCK_EVENTS"
       @select-day="onSelectDay"
       @select-week="onSelectWeek"
       @select-month="onSelectMonth"

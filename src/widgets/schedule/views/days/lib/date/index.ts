@@ -1,4 +1,4 @@
-import { WEEKS } from '@/shared/constants/date'
+import { WEEK_DAYS } from '@/shared/constants/date'
 
 export function getDayByDate(date: Date) {
   return date.getDate()
@@ -7,7 +7,7 @@ export function getDayByDate(date: Date) {
 export function getDayOfWeekByDate(date: Date) {
   const day = date.getDay()
 
-  return WEEKS[day === 0 ? 6 : day - 1]
+  return WEEK_DAYS[day === 0 ? 6 : day - 1]
 }
 
 export function isCurrentDay(date: Date) {

@@ -3,9 +3,9 @@
     :is="component"
     :to="to"
     :disabled="disabled"
-    class="inline-flex items-center justify-center relative anim py-2 px-4 rounded-lg"
+    class="anim relative inline-flex items-center justify-center rounded-lg px-4 py-2"
     :class="{
-      ['bg-black hover:bg-black/90 text-white']: variant === Variants.Primary,
+      ['bg-black text-white hover:bg-black/90']: variant === Variants.Primary,
       ['bg-tur hover:bg-tur/90 text-white']: variant === Variants.Secondary,
       ['border border-black text-black']: variant === Variants.outline,
     }"
@@ -15,10 +15,6 @@
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(defineProps<Props>(), {
-  variant: Variants.Primary,
-})
-
 enum Variants {
   Primary = 'primary',
   Secondary = 'secondary',
@@ -31,6 +27,10 @@ interface Props {
   variant?: Variants
   loading?: boolean
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: Variants.Primary,
+})
 
 const component = computed(() => (props.to ? 'RouterLink' : 'button'))
 </script>
