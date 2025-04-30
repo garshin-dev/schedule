@@ -3,7 +3,6 @@ import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 import vueTsEslintConfig from '@vue/eslint-config-typescript'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintPluginImport from 'eslint-plugin-import'
-// import eslintPluginTailwindcss from 'eslint-plugin-tailwindcss' // wait for an update v.4.0 or delete
 import pluginVue from 'eslint-plugin-vue'
 
 export default [
@@ -48,12 +47,6 @@ export default [
       ],
       'vue/component-api-style': ['error', ['script-setup']],
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
-      'vue/define-macros-order': [
-        'error',
-        {
-          order: ['defineProps', 'defineEmits'],
-        },
-      ],
       'vue/html-self-closing': [
         'error',
         {
@@ -129,7 +122,6 @@ export default [
   {
     plugins: {
       import: eslintPluginImport,
-      // tailwindcss: eslintPluginTailwindcss
     },
   },
   ...vueTsEslintConfig(),

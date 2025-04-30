@@ -8,9 +8,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Button: typeof import('./src/shared/ui/Button/Button.vue')['default']
+    Button: typeof import('./src/shared/ui/button/Button.vue')['default']
+    Icon: typeof import('./src/shared/ui/icon/Icon.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Select: typeof import('./src/shared/ui/Select/Select.vue')['default']
+    Select: typeof import('./src/shared/ui/select/Select.vue')['default']
   }
 }

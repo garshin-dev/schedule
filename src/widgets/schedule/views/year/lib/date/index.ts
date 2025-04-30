@@ -12,14 +12,15 @@ export function getYearDates(year: number) {
     const name = MONTHS[el - 1]
     const days = getMonthDates(year, el, true)
     const weeks: WeekEntry[] = []
-    const encounteredWeeks = new Set<number>()
+    const encounteredWeeks = new Map<number, number>()
 
     for (const day of days) {
-      const weekNum = getWeekNumber(day)
+      const weekNumber = getWeekNumber(day)
 
-      if (!encounteredWeeks.has(weekNum)) {
-        encounteredWeeks.add(weekNum)
-        weeks.push({ date: day, num: weekNum })
+      encounteredWeeks.set(weekNumber, (encounteredWeeks.get(weekNumber) || 0) + 1)
+
+      if (encounteredWeeks.get(weekNumber) === 7) {
+        weeks.push({ date: day, num: weekNumber })
       }
     }
 
