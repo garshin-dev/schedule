@@ -60,3 +60,7 @@ export function getDatesBetween(startDate: Date, endDate: Date): Date[] {
 
   return dates
 }
+
+export function isThisMonth(date: Date, month: number): boolean {
+  return date.getMonth() + 1 === month
+}

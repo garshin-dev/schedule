@@ -1,6 +1,6 @@
 import { getWeekNumber } from '@/shared/lib/date'
 
-export const showDay = async (date: Date, router: ReturnType<typeof useRouter>) => {
+export async function showDay(date: Date, router: ReturnType<typeof useRouter>) {
   const year = date.getFullYear()
   const week = getWeekNumber(date)
   const day = date.getDay() === 0 ? 7 : date.getDay()
@@ -15,7 +15,7 @@ export const showDay = async (date: Date, router: ReturnType<typeof useRouter>) 
   })
 }
 
-export const showWeek = async (date: Date, router: ReturnType<typeof useRouter>) => {
+export async function showWeek(date: Date, router: ReturnType<typeof useRouter>) {
   const year = date.getFullYear()
   const week = getWeekNumber(date)
 
@@ -28,7 +28,7 @@ export const showWeek = async (date: Date, router: ReturnType<typeof useRouter>)
   })
 }
 
-export const showMonth = async (date: Date, router: ReturnType<typeof useRouter>) => {
+export async function showMonth(date: Date, router: ReturnType<typeof useRouter>) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
 
