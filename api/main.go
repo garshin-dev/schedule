@@ -1,21 +1,24 @@
 package main
 
 import (
-	"database/sql"
-	"encoding/json"
+	"api/db"
+	"api/handlers"
+	"api/middleware"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 )
 
 type User struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	ID        int       `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func main() {
@@ -26,89 +29,21 @@ func main() {
 	PORT := os.Getenv("BACKEND_PORT")
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbUser, dbPassword, dbName)
-	db, err := sql.Open("postgres", dsn)
+
+	database, err := db.Connect(dsn)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	defer db.Close()
+	defer database.Close()
 
 	router := mux.NewRouter().PathPrefix("/api").Subrouter()
-	router.HandleFunc("/users", getUsers(db)).Methods("GET")
-	router.HandleFunc("/users/{id}", getUser(db)).Methods("GET")
-	// router.HandleFunc("/users", createUser(db)).Methods("POST")
-	// router.HandleFunc("/users/{id}", updateUser(db)).Methods("PUT")
-  // router.HandleFunc("/users/{id}", deleteUser(db)).Methods("DELETE")
+	router.HandleFunc("/users", handlers.GetUsers(database)).Methods("GET")
+	router.HandleFunc("/users/{id}", handlers.GetUser(database)).Methods("GET")
+	//router.HandleFunc("/users", createUser(db)).Methods("POST")
+	//router.HandleFunc("/users/{id}", updateUser(db)).Methods("PUT")
+	//router.HandleFunc("/users/{id}", deleteUser(db)).Methods("DELETE")
 
-	log.Fatal(http.ListenAndServe(":"+PORT, corsMiddleware(router)))
-}
-
-func corsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
-}
-
-func getUsers(db *sql.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		rows, err := db.Query("SELECT id, name, email FROM users")
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		defer rows.Close()
-
-		users := []User{}
-
-		for rows.Next() {
-			var user User
-
-			if err := rows.Scan(&user.ID, &user.Name, &user.Email); err != nil {
-				log.Fatal(err)
-			}
-
-			users = append(users, user)
-		}
-
-		if err := rows.Err(); err != nil {
-			log.Fatal(err)
-		}
-
-		json.NewEncoder(w).Encode(users)
-	}
-}
-
-func getUser(db *sql.DB) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
-        params := mux.Vars(r)
-
-        id := params["id"]
-
-        row := db.QueryRow("SELECT id, name, email FROM users WHERE id=$1", id)
-
-        var user User
-
-        if err := row.Scan(&user.ID, &user.Name, &user.Email); err!= nil {
-            if err == sql.ErrNoRows {
-                http.Error(w, "User not found", http.StatusNotFound)
-                return
-            } else {
-                log.Fatal(err)
-            }
-        }
-
-        json.NewEncoder(w).Encode(user)
-    }
+	log.Fatal(http.ListenAndServe(":"+PORT, middleware.CorsMiddleware(router)))
 }
