@@ -24,7 +24,7 @@
     >
       <div
         v-show="isShow"
-        class="absolute top-full z-50 mt-0.5 flex max-h-[160px] w-full flex-col overflow-y-auto rounded border border-black bg-white"
+        class="absolute top-full z-50 mt-0.5 flex max-h-[165px] w-full flex-col overflow-y-auto rounded border border-black bg-white"
       >
         <ul class="flex flex-col">
           <li v-for="item in modelItems" :key="item.name">
