@@ -37,7 +37,7 @@
           :style="{ gridTemplateColumns: `repeat(7, minmax(0, 1fr))` }"
         >
           <div
-            v-for="date in displayDates"
+            v-for="date in dates"
             :key="date.toString()"
             class="flex flex-col gap-1 border-r border-b border-r-black/10 border-b-black/10"
             :style="{ height: DEFAULT_MONTH_CELL_HEIGHT + 'px' }"
@@ -83,6 +83,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import type { RouteParams } from 'vue-router'
 import { Event } from '@/features/schedule/event-month'
 import type { IEvent } from '@/entities/schedule/event-day'
 import { WEEK_DAYS } from '@/shared/constants/date'
@@ -107,9 +108,16 @@ const route = useRoute()
 const params = route.params
 
 const year = Number(params.year)
-const month = Number(params.month)
+const month = ref<number>(Number(params.month))
 
-const displayDates = ref<Date[]>(getMonthDates(year, month))
+const dates = ref<Date[]>(getMonthDates(year, month.value))
+
+const displayDates = (params: RouteParams) => {
+  const year = Number(params.year)
+  month.value = Number(params.month)
+
+  dates.value = getMonthDates(year, month.value)
+}
 
 const eventMap = computed<Record<number, IEvent[]>>(() => {
   return props.events.reduce<Record<number, IEvent[]>>(
@@ -129,7 +137,7 @@ const eventMap = computed<Record<number, IEvent[]>>(() => {
   )
 })
 
-const numberOfWeeks = displayDates.value.reduce((map, date) => {
+const numberOfWeeks = dates.value.reduce((map, date) => {
   const weekNumber = getWeekNumber(date)
 
   if (!map.has(weekNumber)) {
@@ -138,4 +146,9 @@ const numberOfWeeks = displayDates.value.reduce((map, date) => {
 
   return map
 }, new Map<number, Date>())
+
+watch(
+  () => route.params,
+  (params) => displayDates(params),
+)
 </script>
