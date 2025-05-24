@@ -1,16 +1,16 @@
 <template>
-  <div class="flex flex-col w-full">
+  <div class="flex w-full flex-col">
     <div
-      class="grid grid-cols-7 w-full pl-14"
+      class="grid w-full grid-cols-7 pl-14"
       :style="{ gridTemplateColumns: `repeat(${dates.length}, minmax(0, 1fr))` }"
     >
       <div
         v-for="date in dates"
         :key="date.toString()"
-        class="text-center border-b border-b-black/10 pb-2"
+        class="border-b border-b-black/10 pb-2 text-center"
       >
         <button
-          class="uppercase w-full h-auto flex flex-col gap-1 items-center rounded-md anim hover:bg-black/10"
+          class="anim flex h-auto w-full flex-col items-center gap-1 rounded-md uppercase hover:bg-black/10"
           :class="{
             [isCurrentDay(date) ? 'text-black' : 'text-black/30 hover:text-black/50']: true,
             'pointer-events-none': dates.length === 1,
@@ -27,11 +27,11 @@
       </div>
     </div>
     <div class="flex w-full">
-      <div class="flex flex-col items-start border-r border-r-black/10 min-w-14">
+      <div class="flex min-w-14 flex-col items-start border-r border-r-black/10">
         <span
           v-for="hour in HOURS"
           :key="hour"
-          class="text-black/80 flex items-start justify-center"
+          class="flex items-start justify-center text-black/80"
           :style="{ height: DEFAULT_DAY_CELL_HEIGHT + 'px' }"
         >
           <span class="-mt-3.5">
@@ -39,7 +39,7 @@
           </span>
         </span>
       </div>
-      <div class="w-full h-full">
+      <div class="h-full w-full">
         <div
           class="grid w-full"
           :style="{ gridTemplateColumns: `repeat(${dates.length}, minmax(0, 1fr))` }"
@@ -48,7 +48,7 @@
             <div
               v-for="hour in HOURS"
               :key="hour"
-              class="flex uppercase text-center border-b border-b-black/10 relative"
+              class="relative flex border-b border-b-black/10 text-center uppercase"
               :style="{ height: DEFAULT_DAY_CELL_HEIGHT + 'px' }"
             >
               <Event
@@ -109,9 +109,7 @@ const displayDates = (params: RouteParams) => {
   dates.value = getDatesInRange(limit, weekDate)
 }
 
-watch(
-  () => route.params,
-  (params) => displayDates(params),
-  { immediate: true },
-)
+watchEffect(() => {
+  displayDates(route.params)
+})
 </script>

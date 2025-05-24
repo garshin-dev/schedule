@@ -52,10 +52,12 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { getDatesBetween } from '@/widgets/schedule/views/month/lib/date'
-import { getYearDates } from '@/widgets/schedule/views/year/lib/date'
+import type { RouteParams } from 'vue-router'
 import type { IEvent } from '@/entities/schedule/event-day'
 import { WEEK_DAYS } from '@/shared/constants/date'
+import { getDatesBetween } from '@/shared/lib/date'
+import { getYearDates } from '../lib/date'
+import type { YearDates } from '../lib/date'
 
 interface Props {
   events: IEvent[]
@@ -72,7 +74,12 @@ const route = useRoute()
 const params = route.params
 const year = Number(params.year)
 
-const yearDates = getYearDates(year)
+const yearDates = ref<YearDates[]>(getYearDates(year))
+
+const displayDates = (params: RouteParams) => {
+  const year = Number(params.year)
+  yearDates.value = getYearDates(year)
+}
 
 const eventMap = computed<Record<number, IEvent[]>>(() => {
   return props.events.reduce<Record<number, IEvent[]>>(
@@ -91,4 +98,9 @@ const eventMap = computed<Record<number, IEvent[]>>(() => {
     {} as Record<number, IEvent[]>,
   )
 })
+
+watch(
+  () => route.params,
+  (params) => displayDates(params),
+)
 </script>
