@@ -7,7 +7,13 @@ interface WeekEntry {
   num: number
 }
 
-export function getYearDates(year: number) {
+export interface YearDates {
+  name: string
+  days: Date[]
+  weeks: WeekEntry[]
+}
+
+export function getYearDates(year: number): YearDates[] {
   return Array.from({ length: 12 }, (_, el) => el + 1).map((el) => {
     const name = MONTHS[el - 1]
     const days = getMonthDates(year, el, true)

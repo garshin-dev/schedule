@@ -87,8 +87,8 @@ import type { RouteParams } from 'vue-router'
 import { Event } from '@/features/schedule/event-month'
 import type { IEvent } from '@/entities/schedule/event-day'
 import { WEEK_DAYS } from '@/shared/constants/date'
-import { getWeekNumber } from '@/shared/lib/date'
-import { getMonthDates, getDatesBetween, isThisMonth } from '../lib/date'
+import { getWeekNumber, getDatesBetween } from '@/shared/lib/date'
+import { getMonthDates, isThisMonth } from '../lib/date'
 
 interface Props {
   events: IEvent[]
