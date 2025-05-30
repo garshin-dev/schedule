@@ -5,9 +5,11 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
       PGDATA: ${DB_DATA_PATH}
     volumes:
-      - ./api/postgres-data:/data/postgres
+      - ./api/postgres-data:${DB_DATA_PATH}
+      - ./api/init:/docker-entrypoint-initdb.d
     ports:
       - '${DB_PORT}:${DB_PORT}'
   backend:
