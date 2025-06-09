@@ -8,7 +8,17 @@
 
 ## Architecture
 
-The project uses [FSD](https://feature-sliced.design/) architectural methodology.
+The project uses [FSD](https://feature-sliced.design/) architectural methodology.   
+
+## Run with Docker
+
+```sh
+docker compose up --build
+```
+
+---
+
+# Local
 
 ## Project Setup
 
