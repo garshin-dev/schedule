@@ -2,24 +2,16 @@ package main
 
 import (
 	"api/db"
-	"api/handlers"
+	"api/di"
 	"api/middleware"
+	"api/routes"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"time"
 
-	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 )
-
-type User struct {
-	ID        int       `json:"id"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	CreatedAt time.Time `json:"created_at"`
-}
 
 func main() {
 	dbUser := os.Getenv("DB_USER")
@@ -38,12 +30,13 @@ func main() {
 
 	defer database.Close()
 
-	router := mux.NewRouter().PathPrefix("/api").Subrouter()
-	router.HandleFunc("/users", handlers.GetUsers(database)).Methods("GET")
-	router.HandleFunc("/users/{id}", handlers.GetUser(database)).Methods("GET")
-	//router.HandleFunc("/users", createUser(db)).Methods("POST")
-	//router.HandleFunc("/users/{id}", updateUser(db)).Methods("PUT")
-	//router.HandleFunc("/users/{id}", deleteUser(db)).Methods("DELETE")
+	deps, err := di.InitDependencies(database)
+
+	if err != nil {
+		log.Fatalf("Failed to initialize dependencies: %v", err)
+	}
+
+	router := routes.SetupRouter(deps)
 
 	log.Fatal(http.ListenAndServe(":"+PORT, middleware.CorsMiddleware(router)))
 }
