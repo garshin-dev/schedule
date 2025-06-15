@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
-:root {
+@theme {
   --color-white: #FFFFFF;
   --color-black: #131E3A;
-  --color-tur: #28cdbe;
+  --color-blue: #255ff3;
+  --color-blue-rgb: 37, 95, 243;
   --color-transparent: transparent;
 }
 
