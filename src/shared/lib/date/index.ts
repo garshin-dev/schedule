@@ -27,8 +27,13 @@ export function getDateByWeek(year: number, week: number) {
   const date = new Date(year, 0, 4)
   const firstWeekStart = new Date(date.setDate(date.getDate() - (date.getDay() || 7) + 1))
   firstWeekStart.setDate(firstWeekStart.getDate() + (week - 1) * 7)
-
   return firstWeekStart
+}
+
+export function getDateByDay(year: number, day: number) {
+  const date = new Date(year, 0)
+  date.setDate(day)
+  return date
 }
 
 export function getDatesBetween(startDate: Date, endDate: Date): Date[] {

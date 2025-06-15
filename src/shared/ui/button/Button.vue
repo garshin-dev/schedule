@@ -6,8 +6,8 @@
     class="anim relative inline-flex items-center justify-center rounded-lg px-4 py-2"
     :class="{
       ['bg-black text-white hover:bg-black/90']: variant === Variants.Primary,
-      ['bg-tur hover:bg-tur/90 text-white']: variant === Variants.Secondary,
-      ['border border-black text-black']: variant === Variants.outline,
+      ['bg-blue hover:bg-blue/90 text-white']: variant === Variants.Secondary,
+      ['border border-black text-black']: variant === Variants.Outline,
     }"
   >
     <slot />
@@ -15,11 +15,7 @@
 </template>
 
 <script setup lang="ts">
-enum Variants {
-  Primary = 'primary',
-  Secondary = 'secondary',
-  outline = 'outline',
-}
+import { Variants } from './button.types.ts'
 
 interface Props {
   to?: string
