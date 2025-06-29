@@ -1,7 +1,7 @@
 <template>
   <span
     tabindex="0"
-    class="flex flex-col items-start text-left size-full text-black px-3 py-2 rounded-md anim border-2 border-transparent"
+    class="anim flex size-full flex-col items-start overflow-hidden rounded-md border-2 border-transparent px-3 py-2 text-left text-black"
     :style="{
       backgroundColor: hexToRgba(event.background, 0.3),
       borderColor: isHovering ? event.background : '',

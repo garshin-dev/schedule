@@ -51,11 +51,10 @@ export const useViewSwitch = () => {
     switch (option.value) {
       case ViewUnits.Day:
         await router.push({
-          name: 'schedule-days',
+          name: 'schedule-day',
           params: {
             year: CURRENT_YEAR,
-            week: CURRENT_WEEK,
-            startDay: CURRENT_START_DAY,
+            day: CURRENT_START_DAY,
           },
         })
         break
@@ -94,12 +93,12 @@ export const useViewSwitch = () => {
   }
 
   const defineView = (params: Params) => {
-    const { year, month, week, startDay, endDay } = params
+    const { year, month, week, day, endDay } = params
 
-    if (endDay) {
-      selectView(ViewUnits.Days)
-    } else if (startDay) {
+    if (day) {
       selectView(ViewUnits.Day)
+    } else if (endDay) {
+      selectView(ViewUnits.Days)
     } else if (week) {
       selectView(ViewUnits.Week)
     } else if (month) {

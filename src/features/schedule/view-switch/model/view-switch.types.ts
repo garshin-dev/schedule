@@ -16,6 +16,7 @@ export interface Params {
   year?: number
   month?: number
   week?: number
+  day?: number
   startDay?: number
   endDay?: number
 }

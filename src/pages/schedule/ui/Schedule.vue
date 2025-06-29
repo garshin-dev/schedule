@@ -1,8 +1,17 @@
 <template>
   <div class="flex flex-col items-start px-3 py-4">
-    <div class="mb-4 flex items-center gap-4">
-      <ViewSwitch />
-      <TimeUnitSwitch v-if="timeUnitType" :type="timeUnitType" />
+    <div class="mb-4 flex w-full items-center gap-4">
+      <div class="flex items-center gap-4">
+        <ViewSwitch />
+        <TimeUnitSwitch :type="TimeUnits.Years" />
+        <TimeUnitSwitch v-if="timeUnitType" :type="timeUnitType" />
+      </div>
+      <div class="ml-auto">
+        <CurrentMonth
+          v-if="[ViewUnits.Day, ViewUnits.Days, ViewUnits.Week].includes(selectedView.value)"
+        />
+      </div>
+      <div class="loader"></div>
     </div>
 
     <YearView
@@ -27,6 +36,7 @@ import { useRouter } from 'vue-router'
 import { DaysView } from '@/widgets/schedule/views/days'
 import { MonthView } from '@/widgets/schedule/views/month'
 import { YearView } from '@/widgets/schedule/views/year'
+import { CurrentMonth } from '@/features/schedule/current-month'
 import { TimeUnitSwitch, TimeUnits } from '@/features/schedule/time-unit-switch'
 import { ViewSwitch, useViewSwitch, ViewUnits } from '@/features/schedule/view-switch'
 import type { IEvent } from '@/entities/schedule/event-day'
@@ -66,7 +76,7 @@ const MOCK_EVENTS: IEvent[] = [
   },
   {
     id: 3,
-    name: 'Weekly team meeting 2',
+    name: 'Weekly team meeting 222',
     startDate: new Date('2025.04.21'),
     endDate: new Date('2025.04.21'),
     startTime: '08:15',
@@ -150,8 +160,8 @@ const MOCK_EVENTS: IEvent[] = [
     name: 'Long',
     startDate: new Date('2025.04.21'),
     endDate: new Date('2025.04.23'),
-    startTime: '22:15',
-    endTime: '03:40',
+    startTime: '07:15',
+    endTime: '07:40',
     background: '#2b3e3c',
   },
   {
@@ -180,8 +190,6 @@ const timeUnitType = computed(() => {
       return TimeUnits.Weeks
     case ViewUnits.Month:
       return TimeUnits.Months
-    case ViewUnits.Year:
-      return TimeUnits.Years
     default:
       return null
   }

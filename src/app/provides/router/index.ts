@@ -39,8 +39,13 @@ const router = createRouter({
           component: () => import('@/pages/schedule/ui/Schedule.vue'),
         },
         {
-          path: 'days/:year/:week/:startDay/:endDay?',
+          path: 'days/:year/:week/:startDay/:endDay',
           name: 'schedule-days',
+          component: () => import('@/pages/schedule/ui/Schedule.vue'),
+        },
+        {
+          path: 'day/:year/:day',
+          name: 'schedule-day',
           component: () => import('@/pages/schedule/ui/Schedule.vue'),
         },
       ],
