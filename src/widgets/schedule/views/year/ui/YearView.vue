@@ -3,7 +3,7 @@
     <div class="grid grid-cols-4 gap-8">
       <div v-for="(month, i) in yearDates" :key="month.name" class="flex flex-col gap-2">
         <button
-          class="anim rounded bg-black/10 uppercase hover:bg-black hover:text-white"
+          class="anim relative rounded bg-black/10 uppercase hover:bg-black hover:text-white"
           @click="$emit('select-month', new Date(year, i))"
         >
           {{ month.name }}
@@ -28,10 +28,13 @@
             <button
               v-for="day in month.days"
               :key="day.getTime()"
-              class="anim relative -mb-px -ml-px border border-black p-2 text-center hover:bg-black hover:text-white"
+              class="anim relative -mb-px -ml-px border border-black p-2 text-center font-bold hover:text-white"
+              :class="[isCurrentDay(day) ? 'hover:bg-blue bg-blue/20' : 'hover:bg-black']"
               @click="$emit('select-day', day)"
             >
-              {{ day.getDate() }}
+              <span class="relative z-10">{{ day.getDate() }}</span>
+
+              <Animation v-if="isCurrentDay(day)" transparent />
               <template v-if="eventMap[day.getTime()]">
                 <span class="absolute top-0 left-0 flex flex-wrap gap-px">
                   <span
@@ -53,6 +56,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import type { RouteParams } from 'vue-router'
+import { isCurrentDay } from '@/widgets/schedule/views/days/lib/date'
 import type { IEvent } from '@/entities/schedule/event-day'
 import { WEEK_DAYS } from '@/shared/constants/date'
 import { getDatesBetween } from '@/shared/lib/date'
@@ -77,7 +81,7 @@ const year = Number(params.year)
 const yearDates = ref<YearDates[]>(getYearDates(year))
 
 const displayDates = (params: RouteParams) => {
-  const year = Number(params.year)
+  const year = +params.year
   yearDates.value = getYearDates(year)
 }
 

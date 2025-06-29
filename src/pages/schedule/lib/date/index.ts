@@ -1,16 +1,15 @@
+import { getDayOfYear } from '@/widgets/schedule/views/days/lib/date'
 import { getWeekNumber } from '@/shared/lib/date'
 
 export async function showDay(date: Date, router: ReturnType<typeof useRouter>) {
   const year = date.getFullYear()
-  const week = getWeekNumber(date)
-  const day = date.getDay() === 0 ? 7 : date.getDay()
+  const day = getDayOfYear(date)
 
   await router.push({
-    name: 'schedule-days',
+    name: 'schedule-day',
     params: {
       year: year,
-      week: week,
-      startDay: day,
+      day: day,
     },
   })
 }

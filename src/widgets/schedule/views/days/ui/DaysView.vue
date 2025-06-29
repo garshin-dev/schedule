@@ -24,6 +24,24 @@
             {{ getDayOfWeekByDate(date) }}
           </span>
         </button>
+
+        <div class="flex">
+          <template v-for="event in isEvent(events, date)" :key="event.id">
+            <button
+              v-if="isAllDayEvent(event, date)"
+              :style="{
+                backgroundColor: hexToRgba(event.background, 0.3),
+                borderColor: isHovering ? event.background : '',
+                outlineColor: event.background,
+              }"
+              class="anim w-full rounded-md border-2 border-transparent"
+              @mouseover="isHovering = true"
+              @mouseleave="isHovering = false"
+            >
+              {{ event.name }}
+            </button>
+          </template>
+        </div>
       </div>
     </div>
     <div class="flex w-full">
@@ -51,13 +69,14 @@
               class="relative flex border-b border-b-black/10 text-center uppercase"
               :style="{ height: DEFAULT_DAY_CELL_HEIGHT + 'px' }"
             >
-              <Event
-                v-for="event in isEvent(events, date, hour)"
-                :key="event.id"
-                :current-date="date"
-                :event="event"
-                :overlapping-offset="overlappingOffset(events, event)"
-              />
+              <template v-for="event in isEvent(events, date, hour)" :key="event.id">
+                <Event
+                  v-if="!isAllDayEvent(event, date)"
+                  :current-date="date"
+                  :event="event"
+                  :overlapping-offset="overlappingOffset(events, event, date)"
+                />
+              </template>
             </div>
           </div>
         </div>
@@ -73,9 +92,10 @@ import { Event } from '@/features/schedule/event-day'
 import type { IEvent } from '@/entities/schedule/event-day'
 import { HOURS } from '@/shared/constants/date'
 import { DEFAULT_DAY_CELL_HEIGHT } from '@/shared/constants/sizes'
-import { getDatesInRange, getDateByWeek } from '@/shared/lib/date'
+import { hexToRgba } from '@/shared/lib/color'
+import { getDatesInRange, getDateByWeek, getDateByDay } from '@/shared/lib/date'
 import { isCurrentDay, getDayByDate, getDayOfWeekByDate } from '../lib/date'
-import { isEvent, overlappingOffset } from '../lib/event'
+import { isEvent, overlappingOffset, isAllDayEvent } from '../lib/event'
 
 interface Props {
   events: IEvent[]
@@ -90,10 +110,19 @@ defineEmits<Emits>()
 
 const route = useRoute()
 
+const isHovering = ref<boolean>(false)
+
 const dates = ref<Date[]>([])
 
 const displayDates = (params: RouteParams) => {
   const year = Number(params.year)
+  const day = Number(params.day)
+
+  if (day) {
+    dates.value = [getDateByDay(year, day)]
+    return
+  }
+
   const week = Number(params.week)
   const startDay = Number(params.startDay)
   const endDay = Number(params.endDay)
